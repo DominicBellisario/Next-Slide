@@ -82,7 +82,6 @@ public class PlayerMovement : MonoBehaviour
         float raycastDistance = centerCollider.bounds.extents.y + 0.01f;
         if (Physics2D.Raycast(transform.position, -Vector2.up, raycastDistance, centerCollider.includeLayers))
         {
-            Debug.Log("grounded");
             return true;
         }
         return false;
