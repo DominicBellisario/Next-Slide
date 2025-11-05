@@ -20,12 +20,13 @@ public class ObjectLogic : MonoBehaviour
     [SerializeField] float clickRange;
     [SerializeField] bool[] editableEdges;
     [SerializeField] GameObject[] knobs;
-    [SerializeField] GameObject[] bars;
+    [SerializeField] GameObject[] edges;
 
     Vector3[] knobsStartPos;
-    Vector3[] barsStartPos;
-    Vector2[] barsStartSize;
-    SpriteRenderer[] barsSpriteRenderer;
+    Vector3[] edgesStartPos;
+    Vector2[] edgesStartSize;
+    SpriteRenderer[] edgesSpriteRenderer;
+    EdgeLogic[] edgesLogic;
     SpriteRenderer spriteRenderer;
     BoxCollider2D col;
     Vector3 startMousePos;
@@ -40,10 +41,15 @@ public class ObjectLogic : MonoBehaviour
         col = GetComponent<BoxCollider2D>();
         edgeBeingResized = 0;
         knobsStartPos = new Vector3[4];
-        barsStartPos = new Vector3[4];
-        barsStartSize = new Vector2[4];
-        barsSpriteRenderer = new SpriteRenderer[4];
-        for (int i = 0; i < 4; i++) { barsSpriteRenderer[i] = bars[i].GetComponent<SpriteRenderer>(); }
+        edgesStartPos = new Vector3[4];
+        edgesStartSize = new Vector2[4];
+        edgesSpriteRenderer = new SpriteRenderer[4];
+        edgesLogic = new EdgeLogic[4];
+        for (int i = 0; i < 4; i++)
+        {
+            edgesSpriteRenderer[i] = edges[i].GetComponent<SpriteRenderer>();
+            edgesLogic[i] = edges[i].GetComponent<EdgeLogic>();
+        }
     }
 
     void Update()
@@ -57,8 +63,8 @@ public class ObjectLogic : MonoBehaviour
             for (int i = 0; i < 4; i++)
             {
                 knobsStartPos[i] = knobs[i].transform.position;
-                barsStartPos[i] = bars[i].transform.position;
-                barsStartSize[i] = barsSpriteRenderer[i].size;
+                edgesStartPos[i] = edges[i].transform.position;
+                edgesStartSize[i] = edgesSpriteRenderer[i].size;
             }
         }
 
@@ -77,13 +83,13 @@ public class ObjectLogic : MonoBehaviour
                 knobs[BOTTOMLEFT].transform.position = knobsStartPos[BOTTOMLEFT];
                 knobs[BOTTOMRIGHT].transform.position = knobsStartPos[BOTTOMRIGHT];
 
-                barsSpriteRenderer[LEFT].size = new Vector2(barsStartSize[LEFT].x, barsStartSize[LEFT].y + deltaY);
-                barsSpriteRenderer[RIGHT].size = new Vector2(barsStartSize[RIGHT].x, barsStartSize[RIGHT].y + deltaY);
+                edgesSpriteRenderer[LEFT].size = new Vector2(edgesStartSize[LEFT].x, edgesStartSize[LEFT].y + deltaY);
+                edgesSpriteRenderer[RIGHT].size = new Vector2(edgesStartSize[RIGHT].x, edgesStartSize[RIGHT].y + deltaY);
 
-                bars[TOP].transform.position = new Vector3(barsStartPos[TOP].x, barsStartPos[TOP].y + deltaY, barsStartPos[TOP].z);
-                bars[BOTTOM].transform.position = barsStartPos[BOTTOM];
-                bars[LEFT].transform.position = new Vector3(barsStartPos[LEFT].x, barsStartPos[LEFT].y + (deltaY / 2), barsStartPos[LEFT].z);
-                bars[RIGHT].transform.position = new Vector3(barsStartPos[RIGHT].x, barsStartPos[RIGHT].y + (deltaY / 2), barsStartPos[RIGHT].z);   
+                edges[TOP].transform.position = new Vector3(edgesStartPos[TOP].x, edgesStartPos[TOP].y + deltaY, edgesStartPos[TOP].z);
+                edges[BOTTOM].transform.position = edgesStartPos[BOTTOM];
+                edges[LEFT].transform.position = new Vector3(edgesStartPos[LEFT].x, edgesStartPos[LEFT].y + (deltaY / 2), edgesStartPos[LEFT].z);
+                edges[RIGHT].transform.position = new Vector3(edgesStartPos[RIGHT].x, edgesStartPos[RIGHT].y + (deltaY / 2), edgesStartPos[RIGHT].z);   
             }
             else if (edgeBeingResized == RIGHT)
             {
@@ -95,13 +101,13 @@ public class ObjectLogic : MonoBehaviour
                 knobs[BOTTOMLEFT].transform.position = knobsStartPos[BOTTOMLEFT];
                 knobs[TOPLEFT].transform.position = knobsStartPos[TOPLEFT];
 
-                barsSpriteRenderer[TOP].size = new Vector2(barsStartSize[TOP].x + deltaX, barsStartSize[TOP].y);
-                barsSpriteRenderer[BOTTOM].size = new Vector2(barsStartSize[BOTTOM].x + deltaX, barsStartSize[BOTTOM].y);
+                edgesSpriteRenderer[TOP].size = new Vector2(edgesStartSize[TOP].x + deltaX, edgesStartSize[TOP].y);
+                edgesSpriteRenderer[BOTTOM].size = new Vector2(edgesStartSize[BOTTOM].x + deltaX, edgesStartSize[BOTTOM].y);
 
-                bars[TOP].transform.position = new Vector3(barsStartPos[TOP].x + (deltaX / 2), barsStartPos[TOP].y, barsStartPos[TOP].z);
-                bars[BOTTOM].transform.position = new Vector3(barsStartPos[BOTTOM].x + (deltaX / 2), barsStartPos[BOTTOM].y, barsStartPos[BOTTOM].z);
-                bars[LEFT].transform.position = barsStartPos[LEFT];
-                bars[RIGHT].transform.position = new Vector3(barsStartPos[RIGHT].x + deltaX, barsStartPos[RIGHT].y, barsStartPos[RIGHT].z);
+                edges[TOP].transform.position = new Vector3(edgesStartPos[TOP].x + (deltaX / 2), edgesStartPos[TOP].y, edgesStartPos[TOP].z);
+                edges[BOTTOM].transform.position = new Vector3(edgesStartPos[BOTTOM].x + (deltaX / 2), edgesStartPos[BOTTOM].y, edgesStartPos[BOTTOM].z);
+                edges[LEFT].transform.position = edgesStartPos[LEFT];
+                edges[RIGHT].transform.position = new Vector3(edgesStartPos[RIGHT].x + deltaX, edgesStartPos[RIGHT].y, edgesStartPos[RIGHT].z);
             }
             else if (edgeBeingResized == BOTTOM)
             {
@@ -113,13 +119,13 @@ public class ObjectLogic : MonoBehaviour
                 knobs[TOPLEFT].transform.position = knobsStartPos[TOPLEFT];
                 knobs[TOPRIGHT].transform.position = knobsStartPos[TOPRIGHT];
 
-                barsSpriteRenderer[LEFT].size = new Vector2(barsStartSize[LEFT].x, barsStartSize[LEFT].y - deltaY);
-                barsSpriteRenderer[RIGHT].size = new Vector2(barsStartSize[RIGHT].x, barsStartSize[RIGHT].y - deltaY);
+                edgesSpriteRenderer[LEFT].size = new Vector2(edgesStartSize[LEFT].x, edgesStartSize[LEFT].y - deltaY);
+                edgesSpriteRenderer[RIGHT].size = new Vector2(edgesStartSize[RIGHT].x, edgesStartSize[RIGHT].y - deltaY);
 
-                bars[TOP].transform.position = barsStartPos[TOP];
-                bars[BOTTOM].transform.position = new Vector3(barsStartPos[BOTTOM].x, barsStartPos[BOTTOM].y + deltaY, barsStartPos[BOTTOM].z);
-                bars[LEFT].transform.position = new Vector3(barsStartPos[LEFT].x, barsStartPos[LEFT].y + (deltaY / 2), barsStartPos[LEFT].z);
-                bars[RIGHT].transform.position = new Vector3(barsStartPos[RIGHT].x, barsStartPos[RIGHT].y + (deltaY / 2), barsStartPos[RIGHT].z);
+                edges[TOP].transform.position = edgesStartPos[TOP];
+                edges[BOTTOM].transform.position = new Vector3(edgesStartPos[BOTTOM].x, edgesStartPos[BOTTOM].y + deltaY, edgesStartPos[BOTTOM].z);
+                edges[LEFT].transform.position = new Vector3(edgesStartPos[LEFT].x, edgesStartPos[LEFT].y + (deltaY / 2), edgesStartPos[LEFT].z);
+                edges[RIGHT].transform.position = new Vector3(edgesStartPos[RIGHT].x, edgesStartPos[RIGHT].y + (deltaY / 2), edgesStartPos[RIGHT].z);
             }
             else if (edgeBeingResized == LEFT)
             {
@@ -131,27 +137,28 @@ public class ObjectLogic : MonoBehaviour
                 knobs[TOPRIGHT].transform.position = knobsStartPos[TOPRIGHT];
                 knobs[BOTTOMRIGHT].transform.position = knobsStartPos[BOTTOMRIGHT];
 
-                barsSpriteRenderer[TOP].size = new Vector2(barsStartSize[TOP].x - deltaX, barsStartSize[TOP].y);
-                barsSpriteRenderer[BOTTOM].size = new Vector2(barsStartSize[BOTTOM].x - deltaX, barsStartSize[BOTTOM].y);
+                edgesSpriteRenderer[TOP].size = new Vector2(edgesStartSize[TOP].x - deltaX, edgesStartSize[TOP].y);
+                edgesSpriteRenderer[BOTTOM].size = new Vector2(edgesStartSize[BOTTOM].x - deltaX, edgesStartSize[BOTTOM].y);
 
-                bars[TOP].transform.position = new Vector3(barsStartPos[TOP].x + (deltaX / 2), barsStartPos[TOP].y, barsStartPos[TOP].z);
-                bars[BOTTOM].transform.position = new Vector3(barsStartPos[BOTTOM].x + (deltaX / 2), barsStartPos[BOTTOM].y, barsStartPos[BOTTOM].z);
-                bars[LEFT].transform.position = new Vector3(barsStartPos[LEFT].x + deltaX, barsStartPos[LEFT].y, barsStartPos[LEFT].z);
-                bars[RIGHT].transform.position = barsStartPos[RIGHT];
+                edges[TOP].transform.position = new Vector3(edgesStartPos[TOP].x + (deltaX / 2), edgesStartPos[TOP].y, edgesStartPos[TOP].z);
+                edges[BOTTOM].transform.position = new Vector3(edgesStartPos[BOTTOM].x + (deltaX / 2), edgesStartPos[BOTTOM].y, edgesStartPos[BOTTOM].z);
+                edges[LEFT].transform.position = new Vector3(edgesStartPos[LEFT].x + deltaX, edgesStartPos[LEFT].y, edgesStartPos[LEFT].z);
+                edges[RIGHT].transform.position = edgesStartPos[RIGHT];
             }
             col.size = spriteRenderer.size;
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (edgeBeingResized != NONE && Input.GetMouseButtonUp(0))
         {
             Debug.Log("STOP resizing");
+            edgesLogic[edgeBeingResized].ChangeToIdleColor();
             edgeBeingResized = NONE;
         }
     }
 
     bool IsNearEdge()
     {
-        // simple check if mouse is close to shape edge (for demo)
+        // simple check if mouse is close to shape edge
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Bounds bounds = spriteRenderer.bounds;
 
@@ -159,24 +166,28 @@ public class ObjectLogic : MonoBehaviour
         if (editableEdges[TOP] && Mathf.Abs(mouseWorld.y - bounds.max.y) < clickRange)
         {
             edgeBeingResized = TOP;
+            edgesLogic[TOP].ChangeToSelectedColor();
             return true;
         }
         // close to right
         else if (editableEdges[RIGHT] && Mathf.Abs(mouseWorld.x - bounds.max.x) < clickRange)
         {
             edgeBeingResized = RIGHT;
+            edgesLogic[RIGHT].ChangeToSelectedColor();
             return true;
         }
         // close to bottom
         else if (editableEdges[BOTTOM] && Mathf.Abs(mouseWorld.y - bounds.min.y) < clickRange)
         {
             edgeBeingResized = BOTTOM;
+            edgesLogic[BOTTOM].ChangeToSelectedColor();
             return true;
         }
         // close to left
         else if (editableEdges[LEFT] && Mathf.Abs(mouseWorld.x - bounds.min.x) < clickRange)
         {
             edgeBeingResized = LEFT;
+            edgesLogic[LEFT].ChangeToSelectedColor();
             return true;
         }
         return false;
