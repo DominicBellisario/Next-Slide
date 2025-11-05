@@ -1304,6 +1304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b4fc820ea06f54abcbdeeb47ee884c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clickRange: 0.2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
