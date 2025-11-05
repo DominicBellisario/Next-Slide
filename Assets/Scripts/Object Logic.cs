@@ -1,16 +1,22 @@
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(BoxCollider2D))]
 public class ObjectLogic : MonoBehaviour
 {
-    const int NONE = 0;
-    const int TOP = 1;
-    const int RIGHT = 2;
-    const int BOTTOM = 3;
-    const int LEFT = 4;
+    const int NONE = -1;
+    const int TOP = 0;
+    const int RIGHT = 1;
+    const int BOTTOM = 2;
+    const int LEFT = 3;
 
     [SerializeField] float clickRange;
+    /// <summary>
+    /// TOP, RIGHT, BOTTOM, LEFT
+    /// </summary>
+    [SerializeField] bool[] editableEdges;
     SpriteRenderer spriteRenderer;
+    BoxCollider2D col;
     Vector3 startMousePos;
     Vector2 startSize;
     int edgeBeingResized;
@@ -19,6 +25,7 @@ public class ObjectLogic : MonoBehaviour
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        col = GetComponent<BoxCollider2D>();
         edgeBeingResized = 0;
     }
 
@@ -52,7 +59,7 @@ public class ObjectLogic : MonoBehaviour
             {
                 spriteRenderer.size = new Vector2(startSize.x - deltaX, startSize.y);
             }
-
+            col.size = spriteRenderer.size;
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -69,25 +76,25 @@ public class ObjectLogic : MonoBehaviour
         Bounds bounds = spriteRenderer.bounds;
 
         // close to top
-        if (Mathf.Abs(mouseWorld.y - bounds.max.y) < clickRange)
+        if (editableEdges[TOP] && Mathf.Abs(mouseWorld.y - bounds.max.y) < clickRange)
         {
             edgeBeingResized = TOP;
             return true;
         }
         // close to right
-        else if (Mathf.Abs(mouseWorld.x - bounds.max.x) < clickRange)
+        else if (editableEdges[RIGHT] && Mathf.Abs(mouseWorld.x - bounds.max.x) < clickRange)
         {
             edgeBeingResized = RIGHT;
             return true;
         }
         // close to bottom
-        else if (Mathf.Abs(mouseWorld.y - bounds.min.y) < clickRange)
+        else if (editableEdges[BOTTOM] && Mathf.Abs(mouseWorld.y - bounds.min.y) < clickRange)
         {
             edgeBeingResized = BOTTOM;
             return true;
         }
         // close to left
-        else if (Mathf.Abs(mouseWorld.x - bounds.min.x) < clickRange)
+        else if (editableEdges[LEFT] && Mathf.Abs(mouseWorld.x - bounds.min.x) < clickRange)
         {
             edgeBeingResized = LEFT;
             return true;
