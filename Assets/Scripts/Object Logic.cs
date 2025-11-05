@@ -19,6 +19,7 @@ public class ObjectLogic : MonoBehaviour
     BoxCollider2D col;
     Vector3 startMousePos;
     Vector2 startSize;
+    Vector3 startPos;
     int edgeBeingResized;
 
 
@@ -36,6 +37,7 @@ public class ObjectLogic : MonoBehaviour
             Debug.Log("START resizing");
             startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             startSize = spriteRenderer.size;
+            startPos = transform.position;
         }
 
         if (edgeBeingResized != NONE && Input.GetMouseButton(0))
@@ -46,18 +48,22 @@ public class ObjectLogic : MonoBehaviour
             if (edgeBeingResized == TOP)
             {
                 spriteRenderer.size = new Vector2(startSize.x, startSize.y + deltaY);
+                transform.position = new Vector3(startPos.x, startPos.y + (deltaY / 2), startPos.z);
             }
             else if (edgeBeingResized == RIGHT)
             {
                 spriteRenderer.size = new Vector2(startSize.x + deltaX, startSize.y);
+                transform.position = new Vector3(startPos.x + (deltaX / 2), startPos.y, startPos.z);
             }
             else if (edgeBeingResized == BOTTOM)
             {
                 spriteRenderer.size = new Vector2(startSize.x, startSize.y - deltaY);
+                transform.position = new Vector3(startPos.x, startPos.y + (deltaY / 2), startPos.z);
             }
             else if (edgeBeingResized == LEFT)
             {
                 spriteRenderer.size = new Vector2(startSize.x - deltaX, startSize.y);
+                transform.position = new Vector3(startPos.x + (deltaX / 2), startPos.y, startPos.z);
             }
             col.size = spriteRenderer.size;
         }
