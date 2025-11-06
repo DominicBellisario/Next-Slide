@@ -22,9 +22,14 @@ public class EdgeLogic : MonoBehaviour
     {
         sprite.color = startColor;
     }
-    
+
     public void SetDisabled()
     {
         sprite.enabled = false;
+    }
+    
+    public void SetEnabled()
+    {
+        sprite.enabled = true;
     }
 }

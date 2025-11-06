@@ -25,12 +25,21 @@ public class ObjectLogic : MonoBehaviour
     [SerializeField] bool[] editableEdges;
     [SerializeField] GameObject[] knobs;
     [SerializeField] GameObject[] edges;
+    [SerializeField] GameObject[] borders;
 
     Vector3[] knobsStartPos;
+
     Vector3[] edgesStartPos;
     Vector2[] edgesStartSize;
     SpriteRenderer[] edgesSpriteRenderer;
     EdgeLogic[] edgesLogic;
+
+    Vector3 objectStartPos;
+    SpriteRenderer[] bordersSpriteRenderer;
+    EdgeLogic[] bordersLogic;
+    float maxWidthExcludingStartWidth;
+    float maxHeightExcludingStartHeight;
+
     SpriteRenderer spriteRenderer;
     BoxCollider2D col;
     Vector3 startMousePos;
@@ -49,10 +58,18 @@ public class ObjectLogic : MonoBehaviour
         edgesStartSize = new Vector2[4];
         edgesSpriteRenderer = new SpriteRenderer[4];
         edgesLogic = new EdgeLogic[4];
+        bordersSpriteRenderer = new SpriteRenderer[4];
+        bordersLogic = new EdgeLogic[4];
+        objectStartPos = transform.position;
+        maxWidthExcludingStartWidth = maxWidth - (spriteRenderer.size.x / 2);
+        maxHeightExcludingStartHeight = maxHeight - (spriteRenderer.size.y / 2);
         for (int i = 0; i < 4; i++)
         {
             edgesSpriteRenderer[i] = edges[i].GetComponent<SpriteRenderer>();
             edgesLogic[i] = edges[i].GetComponent<EdgeLogic>();
+
+            bordersSpriteRenderer[i] = borders[i].GetComponent<SpriteRenderer>();
+            bordersLogic[i] = borders[i].GetComponent<EdgeLogic>();
 
             // if an edge is not editable, make it invisible
             if (!editableEdges[i])
@@ -91,8 +108,8 @@ public class ObjectLogic : MonoBehaviour
             float clampedDeltaX = deltaX;
             float clampedDeltaY = deltaY;
 
-            float newWidth = startSize.x;
-            float newHeight = startSize.y;
+            float newWidth;
+            float newHeight;
 
             // Predict new size for each edge and clamp if necessary
             if (edgeBeingResized == RIGHT)
@@ -134,6 +151,10 @@ public class ObjectLogic : MonoBehaviour
                 edges[BOTTOM].transform.position = edgesStartPos[BOTTOM];
                 edges[LEFT].transform.position = new Vector3(edgesStartPos[LEFT].x, edgesStartPos[LEFT].y + (clampedDeltaY / 2), edgesStartPos[LEFT].z);
                 edges[RIGHT].transform.position = new Vector3(edgesStartPos[RIGHT].x, edgesStartPos[RIGHT].y + (clampedDeltaY / 2), edgesStartPos[RIGHT].z);
+                // update the borders size.
+                bordersSpriteRenderer[TOP].size = new Vector2(edgesStartSize[TOP].x, edgesStartSize[TOP].y);
+                // update the borders positon.  they should always stay at the max size
+                borders[TOP].transform.position = new Vector3(transform.position.x, objectStartPos.y + maxHeightExcludingStartHeight, 0f);
             }
             else if (edgeBeingResized == RIGHT)
             {
@@ -152,6 +173,10 @@ public class ObjectLogic : MonoBehaviour
                 edges[BOTTOM].transform.position = new Vector3(edgesStartPos[BOTTOM].x + (clampedDeltaX / 2), edgesStartPos[BOTTOM].y, edgesStartPos[BOTTOM].z);
                 edges[LEFT].transform.position = edgesStartPos[LEFT];
                 edges[RIGHT].transform.position = new Vector3(edgesStartPos[RIGHT].x + clampedDeltaX, edgesStartPos[RIGHT].y, edgesStartPos[RIGHT].z);
+
+                bordersSpriteRenderer[RIGHT].size = new Vector2(edgesStartSize[RIGHT].x, edgesStartSize[RIGHT].y);
+
+                borders[RIGHT].transform.position = new Vector3(objectStartPos.x + maxWidthExcludingStartWidth, transform.position.y, 0f);
             }
             else if (edgeBeingResized == BOTTOM)
             {
@@ -170,6 +195,10 @@ public class ObjectLogic : MonoBehaviour
                 edges[BOTTOM].transform.position = new Vector3(edgesStartPos[BOTTOM].x, edgesStartPos[BOTTOM].y + clampedDeltaY, edgesStartPos[BOTTOM].z);
                 edges[LEFT].transform.position = new Vector3(edgesStartPos[LEFT].x, edgesStartPos[LEFT].y + (clampedDeltaY / 2), edgesStartPos[LEFT].z);
                 edges[RIGHT].transform.position = new Vector3(edgesStartPos[RIGHT].x, edgesStartPos[RIGHT].y + (clampedDeltaY / 2), edgesStartPos[RIGHT].z);
+
+                bordersSpriteRenderer[BOTTOM].size = new Vector2(edgesStartSize[BOTTOM].x, edgesStartSize[BOTTOM].y);
+
+                borders[BOTTOM].transform.position = new Vector3(transform.position.x, objectStartPos.y - maxHeightExcludingStartHeight, 0f);
             }
             else if (edgeBeingResized == LEFT)
             {
@@ -188,6 +217,10 @@ public class ObjectLogic : MonoBehaviour
                 edges[BOTTOM].transform.position = new Vector3(edgesStartPos[BOTTOM].x + (clampedDeltaX / 2), edgesStartPos[BOTTOM].y, edgesStartPos[BOTTOM].z);
                 edges[LEFT].transform.position = new Vector3(edgesStartPos[LEFT].x + clampedDeltaX, edgesStartPos[LEFT].y, edgesStartPos[LEFT].z);
                 edges[RIGHT].transform.position = edgesStartPos[RIGHT];
+
+                bordersSpriteRenderer[LEFT].size = new Vector2(edgesStartSize[LEFT].x, edgesStartSize[LEFT].y);
+
+                borders[LEFT].transform.position = new Vector3(objectStartPos.x - maxWidthExcludingStartWidth, transform.position.y, 0f);
             }
             col.size = spriteRenderer.size;
         }
@@ -197,6 +230,7 @@ public class ObjectLogic : MonoBehaviour
         {
             // chnage the color of the selected edge back to normal
             edgesLogic[edgeBeingResized].ChangeToIdleColor();
+            bordersLogic[edgeBeingResized].SetDisabled();
             edgeBeingResized = NONE;
         }
     }
@@ -216,6 +250,7 @@ public class ObjectLogic : MonoBehaviour
         {
             edgeBeingResized = TOP;
             edgesLogic[TOP].ChangeToSelectedColor();
+            bordersLogic[TOP].SetEnabled();
             return true;
         }
         // close to right
@@ -223,6 +258,7 @@ public class ObjectLogic : MonoBehaviour
         {
             edgeBeingResized = RIGHT;
             edgesLogic[RIGHT].ChangeToSelectedColor();
+            bordersLogic[RIGHT].SetEnabled();
             return true;
         }
         // close to bottom
@@ -230,6 +266,7 @@ public class ObjectLogic : MonoBehaviour
         {
             edgeBeingResized = BOTTOM;
             edgesLogic[BOTTOM].ChangeToSelectedColor();
+            bordersLogic[BOTTOM].SetEnabled();
             return true;
         }
         // close to left
@@ -237,6 +274,7 @@ public class ObjectLogic : MonoBehaviour
         {
             edgeBeingResized = LEFT;
             edgesLogic[LEFT].ChangeToSelectedColor();
+            bordersLogic[LEFT].SetEnabled();
             return true;
         }
         return false;
