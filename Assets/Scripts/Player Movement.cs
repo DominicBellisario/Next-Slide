@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework.Internal.Commands;
 using UnityEngine;
 
 public enum PlayerState
@@ -19,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float normalAcceleration;
     [SerializeField] float maxNormalSoeed;
     [SerializeField] Vector2 bounceBackForce;
+    [SerializeField] float objectLaunchUpForce;
 
 
     Rigidbody2D rb;
@@ -27,6 +29,15 @@ public class PlayerMovement : MonoBehaviour
     int facingRight;
     int normalGravity;
     private PlayerState currentState;
+
+    void OnEnable()
+    {
+        ObjectLogic.ReachedMaxHeight += CheckIfPlayerIsLaunched;
+    }
+    void OnDisable()
+    {
+        ObjectLogic.ReachedMaxHeight -= CheckIfPlayerIsLaunched;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -60,7 +71,6 @@ public class PlayerMovement : MonoBehaviour
                 currentState = PlayerState.Walking;
                 break;
         }
-
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -78,5 +88,17 @@ public class PlayerMovement : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private void CheckIfPlayerIsLaunched(GameObject gameObject)
+    {
+        float raycastDistance = centerCollider.bounds.extents.y + 0.05f;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, raycastDistance, centerCollider.includeLayers);
+        if (hit.collider == null) return;
+        if (hit.collider.gameObject == gameObject)
+        {
+            rb.AddForce(new Vector2(objectLaunchUpForce, objectLaunchUpForce));
+            Debug.Log("jump");
+        }
     }
 }

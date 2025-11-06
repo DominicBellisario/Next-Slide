@@ -1,10 +1,12 @@
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(BoxCollider2D))]
 public class ObjectLogic : MonoBehaviour
 {
+    public static event Action<GameObject> ReachedMaxHeight;
+
     #region constants
     const int NONE = -1;
     const int TOP = 0;
@@ -126,6 +128,10 @@ public class ObjectLogic : MonoBehaviour
             {
                 newHeight = Mathf.Clamp(startSize.y + deltaY, minHeight, maxHeight);
                 clampedDeltaY = newHeight - startSize.y;
+                if (newHeight == maxHeight)
+                {
+                    ReachedMaxHeight?.Invoke(gameObject);
+                }
             }
             else if (edgeBeingResized == BOTTOM)
             {
