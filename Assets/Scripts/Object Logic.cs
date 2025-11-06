@@ -18,6 +18,10 @@ public class ObjectLogic : MonoBehaviour
     #endregion
 
     [SerializeField] float clickRange;
+    [SerializeField] float minWidth = 0.5f;
+    [SerializeField] float maxWidth = 10f;
+    [SerializeField] float minHeight = 0.5f;
+    [SerializeField] float maxHeight = 10f;
     [SerializeField] bool[] editableEdges;
     [SerializeField] GameObject[] knobs;
     [SerializeField] GameObject[] edges;
@@ -49,14 +53,21 @@ public class ObjectLogic : MonoBehaviour
         {
             edgesSpriteRenderer[i] = edges[i].GetComponent<SpriteRenderer>();
             edgesLogic[i] = edges[i].GetComponent<EdgeLogic>();
+
+            // if an edge is not editable, make it invisible
+            if (!editableEdges[i])
+            {
+                edgesLogic[i].SetDisabled();
+            }
         }
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && IsNearEdge())
+        // if the mouse is down and near one of this shape's edges
+        if (Input.GetMouseButtonDown(0) && IsNearEdge()) // IsNearEdge determines what edge is being resized
         {
-            Debug.Log("START resizing");
+            // record start values
             startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             startSize = spriteRenderer.size;
             startPos = transform.position;
@@ -68,97 +79,135 @@ public class ObjectLogic : MonoBehaviour
             }
         }
 
+        // if an edge is selected and the mouse is held down
         if (edgeBeingResized != NONE && Input.GetMouseButton(0))
         {
+            // calculate the positional change of the mouse
             Vector3 currentMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            float deltaX = currentMousePos.x - startMousePos.x; // horizontal drag
-            float deltaY = currentMousePos.y - startMousePos.y; // vertical drag
-            if (edgeBeingResized == TOP)
+            float deltaX = currentMousePos.x - startMousePos.x;
+            float deltaY = currentMousePos.y - startMousePos.y;
+
+            // Clamp deltas so size never goes beyond limits
+            float clampedDeltaX = deltaX;
+            float clampedDeltaY = deltaY;
+
+            float newWidth = startSize.x;
+            float newHeight = startSize.y;
+
+            // Predict new size for each edge and clamp if necessary
+            if (edgeBeingResized == RIGHT)
             {
-                spriteRenderer.size = new Vector2(startSize.x, startSize.y + deltaY);
-                transform.position = new Vector3(startPos.x, startPos.y + (deltaY / 2), startPos.z);
-
-                knobs[TOPLEFT].transform.position = new Vector3(knobsStartPos[TOPLEFT].x, knobsStartPos[TOPLEFT].y + deltaY, knobsStartPos[TOPLEFT].z);
-                knobs[TOPRIGHT].transform.position = new Vector3(knobsStartPos[TOPRIGHT].x, knobsStartPos[TOPRIGHT].y + deltaY, knobsStartPos[TOPRIGHT].z);
-                knobs[BOTTOMLEFT].transform.position = knobsStartPos[BOTTOMLEFT];
-                knobs[BOTTOMRIGHT].transform.position = knobsStartPos[BOTTOMRIGHT];
-
-                edgesSpriteRenderer[LEFT].size = new Vector2(edgesStartSize[LEFT].x, edgesStartSize[LEFT].y + deltaY);
-                edgesSpriteRenderer[RIGHT].size = new Vector2(edgesStartSize[RIGHT].x, edgesStartSize[RIGHT].y + deltaY);
-
-                edges[TOP].transform.position = new Vector3(edgesStartPos[TOP].x, edgesStartPos[TOP].y + deltaY, edgesStartPos[TOP].z);
-                edges[BOTTOM].transform.position = edgesStartPos[BOTTOM];
-                edges[LEFT].transform.position = new Vector3(edgesStartPos[LEFT].x, edgesStartPos[LEFT].y + (deltaY / 2), edgesStartPos[LEFT].z);
-                edges[RIGHT].transform.position = new Vector3(edgesStartPos[RIGHT].x, edgesStartPos[RIGHT].y + (deltaY / 2), edgesStartPos[RIGHT].z);   
-            }
-            else if (edgeBeingResized == RIGHT)
-            {
-                spriteRenderer.size = new Vector2(startSize.x + deltaX, startSize.y);
-                transform.position = new Vector3(startPos.x + (deltaX / 2), startPos.y, startPos.z);
-
-                knobs[TOPRIGHT].transform.position = new Vector3(knobsStartPos[TOPRIGHT].x + deltaX, knobsStartPos[TOPRIGHT].y, knobsStartPos[TOPRIGHT].z);
-                knobs[BOTTOMRIGHT].transform.position = new Vector3(knobsStartPos[BOTTOMRIGHT].x + deltaX, knobsStartPos[BOTTOMRIGHT].y, knobsStartPos[BOTTOMRIGHT].z);
-                knobs[BOTTOMLEFT].transform.position = knobsStartPos[BOTTOMLEFT];
-                knobs[TOPLEFT].transform.position = knobsStartPos[TOPLEFT];
-
-                edgesSpriteRenderer[TOP].size = new Vector2(edgesStartSize[TOP].x + deltaX, edgesStartSize[TOP].y);
-                edgesSpriteRenderer[BOTTOM].size = new Vector2(edgesStartSize[BOTTOM].x + deltaX, edgesStartSize[BOTTOM].y);
-
-                edges[TOP].transform.position = new Vector3(edgesStartPos[TOP].x + (deltaX / 2), edgesStartPos[TOP].y, edgesStartPos[TOP].z);
-                edges[BOTTOM].transform.position = new Vector3(edgesStartPos[BOTTOM].x + (deltaX / 2), edgesStartPos[BOTTOM].y, edgesStartPos[BOTTOM].z);
-                edges[LEFT].transform.position = edgesStartPos[LEFT];
-                edges[RIGHT].transform.position = new Vector3(edgesStartPos[RIGHT].x + deltaX, edgesStartPos[RIGHT].y, edgesStartPos[RIGHT].z);
-            }
-            else if (edgeBeingResized == BOTTOM)
-            {
-                spriteRenderer.size = new Vector2(startSize.x, startSize.y - deltaY);
-                transform.position = new Vector3(startPos.x, startPos.y + (deltaY / 2), startPos.z);
-
-                knobs[BOTTOMRIGHT].transform.position = new Vector3(knobsStartPos[BOTTOMRIGHT].x, knobsStartPos[BOTTOMRIGHT].y + deltaY, knobsStartPos[BOTTOMRIGHT].z);
-                knobs[BOTTOMLEFT].transform.position = new Vector3(knobsStartPos[BOTTOMLEFT].x, knobsStartPos[BOTTOMLEFT].y + deltaY, knobsStartPos[BOTTOMLEFT].z);
-                knobs[TOPLEFT].transform.position = knobsStartPos[TOPLEFT];
-                knobs[TOPRIGHT].transform.position = knobsStartPos[TOPRIGHT];
-
-                edgesSpriteRenderer[LEFT].size = new Vector2(edgesStartSize[LEFT].x, edgesStartSize[LEFT].y - deltaY);
-                edgesSpriteRenderer[RIGHT].size = new Vector2(edgesStartSize[RIGHT].x, edgesStartSize[RIGHT].y - deltaY);
-
-                edges[TOP].transform.position = edgesStartPos[TOP];
-                edges[BOTTOM].transform.position = new Vector3(edgesStartPos[BOTTOM].x, edgesStartPos[BOTTOM].y + deltaY, edgesStartPos[BOTTOM].z);
-                edges[LEFT].transform.position = new Vector3(edgesStartPos[LEFT].x, edgesStartPos[LEFT].y + (deltaY / 2), edgesStartPos[LEFT].z);
-                edges[RIGHT].transform.position = new Vector3(edgesStartPos[RIGHT].x, edgesStartPos[RIGHT].y + (deltaY / 2), edgesStartPos[RIGHT].z);
+                newWidth = Mathf.Clamp(startSize.x + deltaX, minWidth, maxWidth);
+                clampedDeltaX = newWidth - startSize.x;
             }
             else if (edgeBeingResized == LEFT)
             {
-                spriteRenderer.size = new Vector2(startSize.x - deltaX, startSize.y);
-                transform.position = new Vector3(startPos.x + (deltaX / 2), startPos.y, startPos.z);
+                newWidth = Mathf.Clamp(startSize.x - deltaX, minWidth, maxWidth);
+                clampedDeltaX = startSize.x - newWidth;
+            }
+            else if (edgeBeingResized == TOP)
+            {
+                newHeight = Mathf.Clamp(startSize.y + deltaY, minHeight, maxHeight);
+                clampedDeltaY = newHeight - startSize.y;
+            }
+            else if (edgeBeingResized == BOTTOM)
+            {
+                newHeight = Mathf.Clamp(startSize.y - deltaY, minHeight, maxHeight);
+                clampedDeltaY = startSize.y - newHeight;
+            }
 
-                knobs[BOTTOMLEFT].transform.position = new Vector3(knobsStartPos[BOTTOMLEFT].x + deltaX, knobsStartPos[BOTTOMLEFT].y, knobsStartPos[BOTTOMLEFT].z);
-                knobs[TOPLEFT].transform.position = new Vector3(knobsStartPos[TOPLEFT].x + deltaX, knobsStartPos[TOPLEFT].y, knobsStartPos[TOPLEFT].z);
+            if (edgeBeingResized == TOP)
+            {
+                // update the main shape's size and position
+                spriteRenderer.size = new Vector2(startSize.x, startSize.y + clampedDeltaY);
+                transform.position = new Vector3(startPos.x, startPos.y + (clampedDeltaY / 2), startPos.z);
+                // update the knobs position.  they should always stay in the corners
+                knobs[TOPLEFT].transform.position = new Vector3(knobsStartPos[TOPLEFT].x, knobsStartPos[TOPLEFT].y + clampedDeltaY, knobsStartPos[TOPLEFT].z);
+                knobs[TOPRIGHT].transform.position = new Vector3(knobsStartPos[TOPRIGHT].x, knobsStartPos[TOPRIGHT].y + clampedDeltaY, knobsStartPos[TOPRIGHT].z);
+                knobs[BOTTOMLEFT].transform.position = knobsStartPos[BOTTOMLEFT];
+                knobs[BOTTOMRIGHT].transform.position = knobsStartPos[BOTTOMRIGHT];
+                // update the edges size.
+                edgesSpriteRenderer[LEFT].size = new Vector2(edgesStartSize[LEFT].x, edgesStartSize[LEFT].y + clampedDeltaY);
+                edgesSpriteRenderer[RIGHT].size = new Vector2(edgesStartSize[RIGHT].x, edgesStartSize[RIGHT].y + clampedDeltaY);
+                // update the edges positon.  they should always stay on the edge of the shape.
+                edges[TOP].transform.position = new Vector3(edgesStartPos[TOP].x, edgesStartPos[TOP].y + clampedDeltaY, edgesStartPos[TOP].z);
+                edges[BOTTOM].transform.position = edgesStartPos[BOTTOM];
+                edges[LEFT].transform.position = new Vector3(edgesStartPos[LEFT].x, edgesStartPos[LEFT].y + (clampedDeltaY / 2), edgesStartPos[LEFT].z);
+                edges[RIGHT].transform.position = new Vector3(edgesStartPos[RIGHT].x, edgesStartPos[RIGHT].y + (clampedDeltaY / 2), edgesStartPos[RIGHT].z);
+            }
+            else if (edgeBeingResized == RIGHT)
+            {
+                spriteRenderer.size = new Vector2(startSize.x + clampedDeltaX, startSize.y);
+                transform.position = new Vector3(startPos.x + (clampedDeltaX / 2), startPos.y, startPos.z);
+
+                knobs[TOPRIGHT].transform.position = new Vector3(knobsStartPos[TOPRIGHT].x + clampedDeltaX, knobsStartPos[TOPRIGHT].y, knobsStartPos[TOPRIGHT].z);
+                knobs[BOTTOMRIGHT].transform.position = new Vector3(knobsStartPos[BOTTOMRIGHT].x + clampedDeltaX, knobsStartPos[BOTTOMRIGHT].y, knobsStartPos[BOTTOMRIGHT].z);
+                knobs[BOTTOMLEFT].transform.position = knobsStartPos[BOTTOMLEFT];
+                knobs[TOPLEFT].transform.position = knobsStartPos[TOPLEFT];
+
+                edgesSpriteRenderer[TOP].size = new Vector2(edgesStartSize[TOP].x + clampedDeltaX, edgesStartSize[TOP].y);
+                edgesSpriteRenderer[BOTTOM].size = new Vector2(edgesStartSize[BOTTOM].x + clampedDeltaX, edgesStartSize[BOTTOM].y);
+
+                edges[TOP].transform.position = new Vector3(edgesStartPos[TOP].x + (clampedDeltaX / 2), edgesStartPos[TOP].y, edgesStartPos[TOP].z);
+                edges[BOTTOM].transform.position = new Vector3(edgesStartPos[BOTTOM].x + (clampedDeltaX / 2), edgesStartPos[BOTTOM].y, edgesStartPos[BOTTOM].z);
+                edges[LEFT].transform.position = edgesStartPos[LEFT];
+                edges[RIGHT].transform.position = new Vector3(edgesStartPos[RIGHT].x + clampedDeltaX, edgesStartPos[RIGHT].y, edgesStartPos[RIGHT].z);
+            }
+            else if (edgeBeingResized == BOTTOM)
+            {
+                spriteRenderer.size = new Vector2(startSize.x, startSize.y - clampedDeltaY);
+                transform.position = new Vector3(startPos.x, startPos.y + (clampedDeltaY / 2), startPos.z);
+
+                knobs[BOTTOMRIGHT].transform.position = new Vector3(knobsStartPos[BOTTOMRIGHT].x, knobsStartPos[BOTTOMRIGHT].y + clampedDeltaY, knobsStartPos[BOTTOMRIGHT].z);
+                knobs[BOTTOMLEFT].transform.position = new Vector3(knobsStartPos[BOTTOMLEFT].x, knobsStartPos[BOTTOMLEFT].y + clampedDeltaY, knobsStartPos[BOTTOMLEFT].z);
+                knobs[TOPLEFT].transform.position = knobsStartPos[TOPLEFT];
+                knobs[TOPRIGHT].transform.position = knobsStartPos[TOPRIGHT];
+
+                edgesSpriteRenderer[LEFT].size = new Vector2(edgesStartSize[LEFT].x, edgesStartSize[LEFT].y - clampedDeltaY);
+                edgesSpriteRenderer[RIGHT].size = new Vector2(edgesStartSize[RIGHT].x, edgesStartSize[RIGHT].y - clampedDeltaY);
+
+                edges[TOP].transform.position = edgesStartPos[TOP];
+                edges[BOTTOM].transform.position = new Vector3(edgesStartPos[BOTTOM].x, edgesStartPos[BOTTOM].y + clampedDeltaY, edgesStartPos[BOTTOM].z);
+                edges[LEFT].transform.position = new Vector3(edgesStartPos[LEFT].x, edgesStartPos[LEFT].y + (clampedDeltaY / 2), edgesStartPos[LEFT].z);
+                edges[RIGHT].transform.position = new Vector3(edgesStartPos[RIGHT].x, edgesStartPos[RIGHT].y + (clampedDeltaY / 2), edgesStartPos[RIGHT].z);
+            }
+            else if (edgeBeingResized == LEFT)
+            {
+                spriteRenderer.size = new Vector2(startSize.x - clampedDeltaX, startSize.y);
+                transform.position = new Vector3(startPos.x + (clampedDeltaX / 2), startPos.y, startPos.z);
+
+                knobs[BOTTOMLEFT].transform.position = new Vector3(knobsStartPos[BOTTOMLEFT].x + clampedDeltaX, knobsStartPos[BOTTOMLEFT].y, knobsStartPos[BOTTOMLEFT].z);
+                knobs[TOPLEFT].transform.position = new Vector3(knobsStartPos[TOPLEFT].x + clampedDeltaX, knobsStartPos[TOPLEFT].y, knobsStartPos[TOPLEFT].z);
                 knobs[TOPRIGHT].transform.position = knobsStartPos[TOPRIGHT];
                 knobs[BOTTOMRIGHT].transform.position = knobsStartPos[BOTTOMRIGHT];
 
-                edgesSpriteRenderer[TOP].size = new Vector2(edgesStartSize[TOP].x - deltaX, edgesStartSize[TOP].y);
-                edgesSpriteRenderer[BOTTOM].size = new Vector2(edgesStartSize[BOTTOM].x - deltaX, edgesStartSize[BOTTOM].y);
+                edgesSpriteRenderer[TOP].size = new Vector2(edgesStartSize[TOP].x - clampedDeltaX, edgesStartSize[TOP].y);
+                edgesSpriteRenderer[BOTTOM].size = new Vector2(edgesStartSize[BOTTOM].x - clampedDeltaX, edgesStartSize[BOTTOM].y);
 
-                edges[TOP].transform.position = new Vector3(edgesStartPos[TOP].x + (deltaX / 2), edgesStartPos[TOP].y, edgesStartPos[TOP].z);
-                edges[BOTTOM].transform.position = new Vector3(edgesStartPos[BOTTOM].x + (deltaX / 2), edgesStartPos[BOTTOM].y, edgesStartPos[BOTTOM].z);
-                edges[LEFT].transform.position = new Vector3(edgesStartPos[LEFT].x + deltaX, edgesStartPos[LEFT].y, edgesStartPos[LEFT].z);
+                edges[TOP].transform.position = new Vector3(edgesStartPos[TOP].x + (clampedDeltaX / 2), edgesStartPos[TOP].y, edgesStartPos[TOP].z);
+                edges[BOTTOM].transform.position = new Vector3(edgesStartPos[BOTTOM].x + (clampedDeltaX / 2), edgesStartPos[BOTTOM].y, edgesStartPos[BOTTOM].z);
+                edges[LEFT].transform.position = new Vector3(edgesStartPos[LEFT].x + clampedDeltaX, edgesStartPos[LEFT].y, edgesStartPos[LEFT].z);
                 edges[RIGHT].transform.position = edgesStartPos[RIGHT];
             }
             col.size = spriteRenderer.size;
         }
 
+        // if an edge was being resized and the mouse was released
         if (edgeBeingResized != NONE && Input.GetMouseButtonUp(0))
         {
-            Debug.Log("STOP resizing");
+            // chnage the color of the selected edge back to normal
             edgesLogic[edgeBeingResized].ChangeToIdleColor();
             edgeBeingResized = NONE;
         }
     }
 
+    /// <summary>
+    /// checks if the mouse is close to an edge and sets whatever edge it is near
+    /// </summary>
+    /// <returns>wether or not the mouse is near an edge</returns>
     bool IsNearEdge()
     {
-        // simple check if mouse is close to shape edge
+
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Bounds bounds = spriteRenderer.bounds;
 

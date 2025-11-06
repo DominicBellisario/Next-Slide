@@ -17,9 +17,14 @@ public class EdgeLogic : MonoBehaviour
     {
         sprite.color = selectedColor;
     }
-    
+
     public void ChangeToIdleColor()
     {
         sprite.color = startColor;
+    }
+    
+    public void SetDisabled()
+    {
+        sprite.enabled = false;
     }
 }

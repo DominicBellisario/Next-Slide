@@ -4,15 +4,13 @@ using UnityEngine;
 public enum PlayerState
 {
     Walking,
-    BounceBack,
-    Landing
+    BounceBack
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
     public static event Action BounceBack;
-    public static event Action Landed;
 
     [SerializeField] Collider2D leftCollider;
     [SerializeField] Collider2D centerCollider;
@@ -54,18 +52,12 @@ public class PlayerMovement : MonoBehaviour
             // player is launched back in the opposite direction
             case PlayerState.BounceBack:
                 rb.linearVelocity = Vector2.zero;
+                //move them manually back a bit (this is to get them out quick if the player quickly moves a block over them)
+                transform.position += new Vector3(100f * Time.deltaTime * -facingRight, 0f, 0f);
                 rb.AddForce(bounceBackForce * new Vector2(-facingRight, normalGravity));
                 BounceBack?.Invoke();
 
-                currentState = PlayerState.Landing;
-                break;
-            // player does not accelerate forward until they touch ground again
-            case PlayerState.Landing:
-                if (IsGrounded())
-                {
-                    Landed?.Invoke();
-                    currentState = PlayerState.Walking;
-                }
+                currentState = PlayerState.Walking;
                 break;
         }
 
@@ -79,9 +71,10 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsGrounded()
     {
-        float raycastDistance = centerCollider.bounds.extents.y + 0.01f;
+        float raycastDistance = centerCollider.bounds.extents.y + 0.05f;
         if (Physics2D.Raycast(transform.position, -Vector2.up, raycastDistance, centerCollider.includeLayers))
         {
+            Debug.Log("grounded");
             return true;
         }
         return false;
