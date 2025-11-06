@@ -29,14 +29,17 @@ public class PlayerMovement : MonoBehaviour
     int facingRight;
     int normalGravity;
     private PlayerState currentState;
+    bool canLaunch;
 
     void OnEnable()
     {
         ObjectLogic.ReachedMaxHeight += CheckIfPlayerIsLaunched;
+        ObjectLogic.ChangingHeight += CheckIfPlatformBelowIsChanging;
     }
     void OnDisable()
     {
         ObjectLogic.ReachedMaxHeight -= CheckIfPlayerIsLaunched;
+        ObjectLogic.ChangingHeight -= CheckIfPlatformBelowIsChanging;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -48,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
         facingRight = 1;
         normalGravity = 1;
         currentState = PlayerState.Walking;
+        canLaunch = true;
     }
 
     // Update is called once per frame
@@ -64,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
             case PlayerState.BounceBack:
                 rb.linearVelocity = Vector2.zero;
                 //move them manually back a bit (this is to get them out quick if the player quickly moves a block over them)
-                transform.position += new Vector3(100f * Time.deltaTime * -facingRight, 0f, 0f);
+                rb.position += new Vector2(0.1f * -facingRight, 0f);
                 rb.AddForce(bounceBackForce * new Vector2(-facingRight, normalGravity));
                 BounceBack?.Invoke();
 
@@ -94,11 +98,29 @@ public class PlayerMovement : MonoBehaviour
     {
         float raycastDistance = centerCollider.bounds.extents.y + 0.05f;
         RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, raycastDistance, centerCollider.includeLayers);
+        if (!canLaunch || hit.collider == null) return;
+        if (hit.collider.gameObject == gameObject)
+        {
+            canLaunch = false;
+            centerCollider.enabled = false;
+            StartCoroutine(Helper.DoThisAfterDelay(() => canLaunch = true, 0.5f)); // player cannot launch again for half a second
+            StartCoroutine(Helper.DoThisAfterDelay(() => centerCollider.enabled = true, 0.5f));
+            rb.linearVelocityY = 0f;
+            rb.AddForce(new Vector2(0f, objectLaunchUpForce));
+            Debug.Log("jump");
+        }
+    }
+
+    private void CheckIfPlatformBelowIsChanging(GameObject gameObject, float heightChange)
+    {
+        float raycastDistance = centerCollider.bounds.extents.y + 0.2f;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, raycastDistance, centerCollider.includeLayers);
         if (hit.collider == null) return;
         if (hit.collider.gameObject == gameObject)
         {
-            rb.AddForce(new Vector2(objectLaunchUpForce, objectLaunchUpForce));
-            Debug.Log("jump");
+            rb.linearVelocityY = -2f;
+            rb.position = new Vector2(rb.position.x, rb.position.y + heightChange);
+            //Debug.Log("resize");
         }
     }
 }

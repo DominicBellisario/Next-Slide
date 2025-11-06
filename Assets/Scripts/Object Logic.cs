@@ -6,6 +6,7 @@ using UnityEngine;
 public class ObjectLogic : MonoBehaviour
 {
     public static event Action<GameObject> ReachedMaxHeight;
+    public static event Action<GameObject, float> ChangingHeight;
 
     #region constants
     const int NONE = -1;
@@ -29,6 +30,8 @@ public class ObjectLogic : MonoBehaviour
     [SerializeField] GameObject[] edges;
     [SerializeField] GameObject[] borders;
 
+    Rigidbody2D rb;
+
     Vector3[] knobsStartPos;
 
     Vector3[] edgesStartPos;
@@ -49,9 +52,13 @@ public class ObjectLogic : MonoBehaviour
     Vector3 startPos;
     int edgeBeingResized;
 
+    Vector2 targetPos;
+    float lastFrameHeight;
+
 
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         col = GetComponent<BoxCollider2D>();
         edgeBeingResized = 0;
@@ -65,6 +72,8 @@ public class ObjectLogic : MonoBehaviour
         objectStartPos = transform.position;
         maxWidthExcludingStartWidth = maxWidth - (spriteRenderer.size.x / 2);
         maxHeightExcludingStartHeight = maxHeight - (spriteRenderer.size.y / 2);
+        targetPos = transform.position;
+        lastFrameHeight = spriteRenderer.size.y;
         for (int i = 0; i < 4; i++)
         {
             edgesSpriteRenderer[i] = edges[i].GetComponent<SpriteRenderer>();
@@ -128,10 +137,15 @@ public class ObjectLogic : MonoBehaviour
             {
                 newHeight = Mathf.Clamp(startSize.y + deltaY, minHeight, maxHeight);
                 clampedDeltaY = newHeight - startSize.y;
-                if (newHeight == maxHeight)
+                if (newHeight == maxHeight && newHeight != lastFrameHeight)
                 {
                     ReachedMaxHeight?.Invoke(gameObject);
                 }
+                else if (newHeight != lastFrameHeight)
+                {
+                    ChangingHeight?.Invoke(gameObject, newHeight - lastFrameHeight);
+                }
+                lastFrameHeight = newHeight;
             }
             else if (edgeBeingResized == BOTTOM)
             {
@@ -143,7 +157,7 @@ public class ObjectLogic : MonoBehaviour
             {
                 // update the main shape's size and position
                 spriteRenderer.size = new Vector2(startSize.x, startSize.y + clampedDeltaY);
-                transform.position = new Vector3(startPos.x, startPos.y + (clampedDeltaY / 2), startPos.z);
+                targetPos = new Vector3(startPos.x, startPos.y + (clampedDeltaY / 2), startPos.z);
                 // update the knobs position.  they should always stay in the corners
                 knobs[TOPLEFT].transform.position = new Vector3(knobsStartPos[TOPLEFT].x, knobsStartPos[TOPLEFT].y + clampedDeltaY, knobsStartPos[TOPLEFT].z);
                 knobs[TOPRIGHT].transform.position = new Vector3(knobsStartPos[TOPRIGHT].x, knobsStartPos[TOPRIGHT].y + clampedDeltaY, knobsStartPos[TOPRIGHT].z);
@@ -165,7 +179,7 @@ public class ObjectLogic : MonoBehaviour
             else if (edgeBeingResized == RIGHT)
             {
                 spriteRenderer.size = new Vector2(startSize.x + clampedDeltaX, startSize.y);
-                transform.position = new Vector3(startPos.x + (clampedDeltaX / 2), startPos.y, startPos.z);
+                targetPos = new Vector3(startPos.x + (clampedDeltaX / 2), startPos.y, startPos.z);
 
                 knobs[TOPRIGHT].transform.position = new Vector3(knobsStartPos[TOPRIGHT].x + clampedDeltaX, knobsStartPos[TOPRIGHT].y, knobsStartPos[TOPRIGHT].z);
                 knobs[BOTTOMRIGHT].transform.position = new Vector3(knobsStartPos[BOTTOMRIGHT].x + clampedDeltaX, knobsStartPos[BOTTOMRIGHT].y, knobsStartPos[BOTTOMRIGHT].z);
@@ -187,7 +201,7 @@ public class ObjectLogic : MonoBehaviour
             else if (edgeBeingResized == BOTTOM)
             {
                 spriteRenderer.size = new Vector2(startSize.x, startSize.y - clampedDeltaY);
-                transform.position = new Vector3(startPos.x, startPos.y + (clampedDeltaY / 2), startPos.z);
+                targetPos = new Vector3(startPos.x, startPos.y + (clampedDeltaY / 2), startPos.z);
 
                 knobs[BOTTOMRIGHT].transform.position = new Vector3(knobsStartPos[BOTTOMRIGHT].x, knobsStartPos[BOTTOMRIGHT].y + clampedDeltaY, knobsStartPos[BOTTOMRIGHT].z);
                 knobs[BOTTOMLEFT].transform.position = new Vector3(knobsStartPos[BOTTOMLEFT].x, knobsStartPos[BOTTOMLEFT].y + clampedDeltaY, knobsStartPos[BOTTOMLEFT].z);
@@ -209,7 +223,7 @@ public class ObjectLogic : MonoBehaviour
             else if (edgeBeingResized == LEFT)
             {
                 spriteRenderer.size = new Vector2(startSize.x - clampedDeltaX, startSize.y);
-                transform.position = new Vector3(startPos.x + (clampedDeltaX / 2), startPos.y, startPos.z);
+                targetPos = new Vector3(startPos.x + (clampedDeltaX / 2), startPos.y, startPos.z);
 
                 knobs[BOTTOMLEFT].transform.position = new Vector3(knobsStartPos[BOTTOMLEFT].x + clampedDeltaX, knobsStartPos[BOTTOMLEFT].y, knobsStartPos[BOTTOMLEFT].z);
                 knobs[TOPLEFT].transform.position = new Vector3(knobsStartPos[TOPLEFT].x + clampedDeltaX, knobsStartPos[TOPLEFT].y, knobsStartPos[TOPLEFT].z);
@@ -228,7 +242,6 @@ public class ObjectLogic : MonoBehaviour
 
                 borders[LEFT].transform.position = new Vector3(objectStartPos.x - maxWidthExcludingStartWidth, transform.position.y, 0f);
             }
-            col.size = spriteRenderer.size;
         }
 
         // if an edge was being resized and the mouse was released
@@ -239,6 +252,12 @@ public class ObjectLogic : MonoBehaviour
             bordersLogic[edgeBeingResized].SetDisabled();
             edgeBeingResized = NONE;
         }
+    }
+
+    private void FixedUpdate()
+    {
+        rb.MovePosition(targetPos);
+        col.size = spriteRenderer.size;
     }
 
     /// <summary>
