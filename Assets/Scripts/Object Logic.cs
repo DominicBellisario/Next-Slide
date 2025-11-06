@@ -92,6 +92,22 @@ public class ObjectLogic : MonoBehaviour
                 edgesLogic[i].SetDisabled();
             }
         }
+
+        // set inital sizes and positions
+        Vector2 size = spriteRenderer.size;
+        col.size = size;
+        knobs[TOPLEFT].transform.position = new Vector3(-size.x / 2, size.y / 2, 0f);
+        knobs[TOPRIGHT].transform.position = new Vector3(size.x / 2, size.y / 2, 0f);
+        knobs[BOTTOMLEFT].transform.position = new Vector3(-size.x / 2, -size.y / 2, 0f);
+        knobs[BOTTOMRIGHT].transform.position = new Vector3(size.x / 2, -size.y / 2, 0f);
+        edgesSpriteRenderer[TOP].size = new Vector2(size.x, 0.1f);
+        edgesSpriteRenderer[BOTTOM].size = new Vector2(size.x, 0.1f);
+        edgesSpriteRenderer[LEFT].size = new Vector2(0.1f, size.y);
+        edgesSpriteRenderer[RIGHT].size = new Vector2(0.1f, size.y);
+        edges[TOP].transform.position = new Vector3(transform.position.x, size.y / 2, 0f);
+        edges[BOTTOM].transform.position = new Vector3(transform.position.x, -size.y / 2, 0f);
+        edges[LEFT].transform.position = new Vector3(-size.x / 2, transform.position.y, 0f);
+        edges[RIGHT].transform.position = new Vector3(size.x / 2, transform.position.y, 0f);
     }
 
     void Update()
