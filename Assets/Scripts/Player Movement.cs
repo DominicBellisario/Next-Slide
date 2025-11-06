@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
     int normalGravity;
     private PlayerState currentState;
     bool canLaunch;
+    float pendingVerticalOffset;
 
     void OnEnable()
     {
@@ -66,6 +67,7 @@ public class PlayerMovement : MonoBehaviour
                 break;
             // player is launched back in the opposite direction
             case PlayerState.BounceBack:
+                Debug.Log("Bounce Back");
                 rb.linearVelocity = Vector2.zero;
                 //move them manually back a bit (this is to get them out quick if the player quickly moves a block over them)
                 rb.position += new Vector2(0.1f * -facingRight, 0f);
@@ -79,14 +81,13 @@ public class PlayerMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // bounce back if a side collider hits an object
-        if (collision.otherCollider != centerCollider) currentState = PlayerState.BounceBack;
+        // bounce back if a side collider hits an object that is NOT the object the player is standing on
+        if (collision.otherCollider != centerCollider && collision.collider != DownRaycast(0.4f, centerCollider.includeLayers).collider) currentState = PlayerState.BounceBack;
     }
 
     private bool IsGrounded()
     {
-        float raycastDistance = centerCollider.bounds.extents.y + 0.05f;
-        if (Physics2D.Raycast(transform.position, -Vector2.up, raycastDistance, centerCollider.includeLayers))
+        if (DownRaycast(0.05f, centerCollider.includeLayers))
         {
             Debug.Log("grounded");
             return true;
@@ -96,8 +97,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckIfPlayerIsLaunched(GameObject gameObject)
     {
-        float raycastDistance = centerCollider.bounds.extents.y + 0.05f;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, raycastDistance, centerCollider.includeLayers);
+        RaycastHit2D hit = DownRaycast(0.05f, centerCollider.includeLayers);
         if (!canLaunch || hit.collider == null) return;
         if (hit.collider.gameObject == gameObject)
         {
@@ -111,16 +111,31 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void CheckIfPlatformBelowIsChanging(GameObject gameObject, float heightChange)
+    private void CheckIfPlatformBelowIsChanging(GameObject platformObj, float heightChange)
     {
-        float raycastDistance = centerCollider.bounds.extents.y + 0.2f;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, raycastDistance, centerCollider.includeLayers);
-        if (hit.collider == null) return;
-        if (hit.collider.gameObject == gameObject)
+        RaycastHit2D hit = DownRaycast(0.2f, centerCollider.includeLayers);
+        if (hit.collider && hit.collider.gameObject == platformObj)
         {
-            rb.linearVelocityY = -2f;
-            rb.position = new Vector2(rb.position.x, rb.position.y + heightChange);
-            //Debug.Log("resize");
+            pendingVerticalOffset += heightChange;
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if (Mathf.Abs(pendingVerticalOffset) > Mathf.Epsilon)
+        {
+            Vector2 newPos = rb.position + new Vector2(0f, pendingVerticalOffset);
+            rb.position = newPos;
+
+            // optional: small downward bias to keep contact solid
+            rb.linearVelocityY = Mathf.Min(rb.linearVelocityY, -0.5f);
+
+            pendingVerticalOffset = 0f;
+        }
+    }
+
+    private RaycastHit2D DownRaycast(float offset, LayerMask layerMask)
+    {
+        return Physics2D.Raycast(transform.position, -Vector2.up, centerCollider.bounds.extents.y + offset, layerMask);
     }
 }
