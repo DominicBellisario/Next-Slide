@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework.Internal.Commands;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum PlayerState
@@ -12,6 +13,7 @@ public enum PlayerState
 public class PlayerMovement : MonoBehaviour
 {
     public static event Action BounceBack;
+    public static event Action FlipH;
 
     [SerializeField] Collider2D leftCollider;
     [SerializeField] Collider2D centerCollider;
@@ -85,14 +87,13 @@ public class PlayerMovement : MonoBehaviour
         if (collision.otherCollider != centerCollider && collision.collider != DownRaycast(0.4f, centerCollider.includeLayers).collider) currentState = PlayerState.BounceBack;
     }
 
-    private bool IsGrounded()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (DownRaycast(0.05f, centerCollider.includeLayers))
+        if (collision.CompareTag("FlipH"))
         {
-            Debug.Log("grounded");
-            return true;
+            facingRight *= -1;
+            FlipH?.Invoke();
         }
-        return false;
     }
 
     private void CheckIfPlayerIsLaunched(GameObject gameObject)
@@ -122,12 +123,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // if there is a pending offet, move the player
         if (Mathf.Abs(pendingVerticalOffset) > Mathf.Epsilon)
         {
             Vector2 newPos = rb.position + new Vector2(0f, pendingVerticalOffset);
             rb.position = newPos;
 
-            // optional: small downward bias to keep contact solid
+            // small downward bias to keep contact solid
             rb.linearVelocityY = Mathf.Min(rb.linearVelocityY, -0.5f);
 
             pendingVerticalOffset = 0f;
