@@ -1,33 +1,40 @@
 using System;
+using System.Collections;
+using System.Runtime.CompilerServices;
 using NUnit.Framework.Internal.Commands;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public enum PlayerState
 {
-    Walking,
-    BounceBack
+    Normal,
+    Impact,
+    BounceBackNormal,
+    BounceBackImpact
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
-    public static event Action BounceBack;
+    public static event Action BounceBackNormal;
+    public static event Action BounceBackImpact;
     public static event Action FlipH;
+    public static event Action SpeedPanel;
 
     [SerializeField] Collider2D leftCollider;
     [SerializeField] Collider2D centerCollider;
     [SerializeField] Collider2D rightCollider;
 
-    [SerializeField] float normalAcceleration;
-    [SerializeField] float maxNormalSoeed;
-    [SerializeField] Vector2 bounceBackForce;
+    [SerializeField] float accelNormal;
+    [SerializeField] float maxSpeedNormal;
+    [SerializeField] float accelImpact;
+    [SerializeField] float maxSpeedImpact;
+    [SerializeField] Vector2 bounceBackForceNormal;
+    [SerializeField] Vector2 bounceBackForceImpact;
     [SerializeField] float objectLaunchUpForce;
 
 
     Rigidbody2D rb;
-    float currentAcceleration;
-    float currentMaxSpeed;
     int facingRight;
     int normalGravity;
     private PlayerState currentState;
@@ -49,11 +56,9 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        currentAcceleration = normalAcceleration;
-        currentMaxSpeed = maxNormalSoeed;
         facingRight = 1;
         normalGravity = 1;
-        currentState = PlayerState.Walking;
+        currentState = PlayerState.Normal;
         canLaunch = true;
     }
 
@@ -62,21 +67,37 @@ public class PlayerMovement : MonoBehaviour
     {
         switch (currentState)
         {
-            // player moves forward at a constant acceleration with a max speed
-            case PlayerState.Walking:
-                rb.AddForce(currentAcceleration * facingRight * Time.deltaTime * Vector2.right);
-                rb.linearVelocity = new Vector2(Mathf.Clamp(rb.linearVelocityX, -currentMaxSpeed, currentMaxSpeed), rb.linearVelocityY);
+            // player moves forward at a normal acceleration with a normal max speed
+            case PlayerState.Normal:
+                rb.AddForce(accelNormal * facingRight * Time.deltaTime * Vector2.right);
+                rb.linearVelocity = new Vector2(Mathf.Clamp(rb.linearVelocityX, -maxSpeedNormal, maxSpeedNormal), rb.linearVelocityY);
+                break;
+            // player moves forward at a fast acceleration with a fast max speed
+            case PlayerState.Impact:
+                rb.AddForce(accelImpact * facingRight * Time.deltaTime * Vector2.right);
+                rb.linearVelocity = new Vector2(Mathf.Clamp(rb.linearVelocityX, -maxSpeedImpact, maxSpeedImpact), rb.linearVelocityY);
                 break;
             // player is launched back in the opposite direction
-            case PlayerState.BounceBack:
-                Debug.Log("Bounce Back");
+            case PlayerState.BounceBackNormal:
+                Debug.Log("Bounce Back Normal");
                 rb.linearVelocity = Vector2.zero;
                 //move them manually back a bit (this is to get them out quick if the player quickly moves a block over them)
                 rb.position += new Vector2(0.1f * -facingRight, 0f);
-                rb.AddForce(bounceBackForce * new Vector2(-facingRight, normalGravity));
-                BounceBack?.Invoke();
+                rb.AddForce(bounceBackForceNormal * new Vector2(-facingRight, normalGravity));
+                BounceBackNormal?.Invoke();
 
-                currentState = PlayerState.Walking;
+                currentState = PlayerState.Normal;
+                break;
+            // player is launched back a lot in the opposite direction
+            case PlayerState.BounceBackImpact:
+                Debug.Log("Bounce Back Impact");
+                rb.linearVelocity = Vector2.zero;
+                //move them manually back a bit (this is to get them out quick if the player quickly moves a block over them)
+                rb.position += new Vector2(0.1f * -facingRight, 0f);
+                rb.AddForce(bounceBackForceImpact * new Vector2(-facingRight, normalGravity));
+                BounceBackImpact?.Invoke();
+
+                currentState = PlayerState.Normal;
                 break;
         }
     }
@@ -84,15 +105,36 @@ public class PlayerMovement : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         // bounce back if a side collider hits an object that is NOT the object the player is standing on
-        if (collision.otherCollider != centerCollider && collision.collider != DownRaycast(0.4f, centerCollider.includeLayers).collider) currentState = PlayerState.BounceBack;
+        if (collision.otherCollider != centerCollider && collision.collider != DownRaycast(0.4f, centerCollider.includeLayers).collider)
+        {
+            switch (currentState)
+            {
+                case PlayerState.Normal:
+                    currentState = PlayerState.BounceBackNormal;
+                    break;
+                case PlayerState.Impact:
+                    currentState = PlayerState.BounceBackImpact;
+                    break;
+                default:
+                    currentState = PlayerState.BounceBackNormal;
+                    break;
+            }
+            
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("FlipH"))
         {
-            facingRight *= -1;
-            FlipH?.Invoke();
+            Debug.Log("Flip");
+            StartCoroutine(PerformFlipH());
+        }
+        else if (collision.CompareTag("SpeedPanel"))
+        {
+            Debug.Log(facingRight == 1);
+            rb.linearVelocityX = maxSpeedImpact * facingRight;
+            currentState = PlayerState.Impact;
         }
     }
 
@@ -139,5 +181,19 @@ public class PlayerMovement : MonoBehaviour
     private RaycastHit2D DownRaycast(float offset, LayerMask layerMask)
     {
         return Physics2D.Raycast(transform.position, -Vector2.up, centerCollider.bounds.extents.y + offset, layerMask);
+    }
+
+    private IEnumerator PerformFlipH()
+    {
+        Vector2 startVelocity = rb.linearVelocity;
+        rb.linearVelocity = Vector2.zero;
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+
+        yield return new WaitForSeconds(0.5f);
+
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        facingRight *= -1;
+        rb.linearVelocity = startVelocity * Vector2.left;
+        FlipH?.Invoke();
     }
 }
