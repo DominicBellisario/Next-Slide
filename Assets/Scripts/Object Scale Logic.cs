@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(BoxCollider2D))]
-public class ObjectLogic : MonoBehaviour
+public class ObjectScaleLogic : MonoBehaviour
 {
     public static event Action<GameObject> ReachedMaxHeight;
     public static event Action<GameObject, float> ChangingHeight;

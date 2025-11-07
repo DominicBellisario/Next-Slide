@@ -43,13 +43,13 @@ public class PlayerMovement : MonoBehaviour
 
     void OnEnable()
     {
-        ObjectLogic.ReachedMaxHeight += CheckIfPlayerIsLaunched;
-        ObjectLogic.ChangingHeight += CheckIfPlatformBelowIsChanging;
+        ObjectScaleLogic.ReachedMaxHeight += CheckIfPlayerIsLaunched;
+        ObjectScaleLogic.ChangingHeight += CheckIfPlatformBelowIsChanging;
     }
     void OnDisable()
     {
-        ObjectLogic.ReachedMaxHeight -= CheckIfPlayerIsLaunched;
-        ObjectLogic.ChangingHeight -= CheckIfPlatformBelowIsChanging;
+        ObjectScaleLogic.ReachedMaxHeight -= CheckIfPlayerIsLaunched;
+        ObjectScaleLogic.ChangingHeight -= CheckIfPlatformBelowIsChanging;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -127,12 +127,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.CompareTag("FlipH"))
         {
-            Debug.Log("Flip");
             StartCoroutine(PerformFlipH());
         }
         else if (collision.CompareTag("SpeedPanel"))
         {
-            Debug.Log(facingRight == 1);
             rb.linearVelocityX = maxSpeedImpact * facingRight;
             currentState = PlayerState.Impact;
         }
