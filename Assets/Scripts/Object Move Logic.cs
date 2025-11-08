@@ -1,75 +1,124 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class ObjectMoveLogic : MonoBehaviour
 {
+    public static event Action<GameObject> ReachedMaxHeight;
+    public static event Action<GameObject, float> ChangingHeight;
+    const int TOP = 0;
+    const int RIGHT = 1;
+    const int BOTTOM = 2;
+    const int LEFT = 3;
+
     [SerializeField] float maxMoveSpeed;
+    [SerializeField] Vector2 topLeft;
+    [SerializeField] Vector2 bottomRight;
+    [SerializeField] GameObject[] borders;
     SpriteRenderer spriteRenderer;
+    SpriteRenderer[] borderSprites;
+    EdgeLogic[] bordersLogic;
     Rigidbody2D rb;
     bool moving;
     Vector3 startMousePos;
     float smoothedDeltaX;
     float smoothedDeltaY;
     Vector2 startPos;
+    Vector3 parentStartPos;
+    bool hitTop;
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         moving = false;
+        borderSprites = new SpriteRenderer[4];
+        bordersLogic = new EdgeLogic[4];
+        parentStartPos = GetComponentInParent<Transform>().position;
+        hitTop = false;
+        for (int i = 0; i < 4; i++)
+        {
+            borderSprites[i] = borders[i].GetComponent<SpriteRenderer>();
+            bordersLogic[i] = borders[i].GetComponent<EdgeLogic>();
+        }
+        borders[TOP].transform.localPosition = new Vector3((bottomRight.x + topLeft.x) / 2, topLeft.y, 0f);
+        borders[RIGHT].transform.localPosition = new Vector3(bottomRight.x, (bottomRight.y + topLeft.y) / 2, 0f);
+        borders[BOTTOM].transform.localPosition = new Vector3((bottomRight.x + topLeft.x) / 2, bottomRight.y, 0f);
+        borders[LEFT].transform.localPosition = new Vector3(topLeft.x, (bottomRight.y + topLeft.y) / 2, 0f);
+        borderSprites[TOP].size = new Vector2(Mathf.Abs(bottomRight.x - topLeft.x), borderSprites[TOP].size.y);
+        borderSprites[RIGHT].size = new Vector2(borderSprites[RIGHT].size.x, Mathf.Abs(bottomRight.y - topLeft.y));
+        borderSprites[BOTTOM].size = new Vector2(Mathf.Abs(bottomRight.x - topLeft.x), borderSprites[BOTTOM].size.y);
+        borderSprites[LEFT].size = new Vector2(borderSprites[LEFT].size.x, Mathf.Abs(bottomRight.y - topLeft.y));
     }
 
     void Update()
     {
-        // if the mouse is down and near one of this shape's edges
+        // if the mouse is down and the object is clicked
         if (Input.GetMouseButtonDown(0) && ObjectClicked())
         {
-            // record start values
             startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             startPos = rb.position;
+            for (int i = 0; i < 4; i++)
+            {
+                bordersLogic[i].SetEnabled();
+            }
         }
 
-        // if an edge is selected and the mouse is held down
+        // while moving
         if (moving && Input.GetMouseButton(0))
         {
             Vector3 currentMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             float targetDeltaX = currentMousePos.x - startMousePos.x;
             float targetDeltaY = currentMousePos.y - startMousePos.y;
 
-            // Gradually move toward the target delta
             smoothedDeltaX = Mathf.MoveTowards(smoothedDeltaX, targetDeltaX, maxMoveSpeed * Time.deltaTime);
             smoothedDeltaY = Mathf.MoveTowards(smoothedDeltaY, targetDeltaY, maxMoveSpeed * Time.deltaTime);
 
-            // Use these for resizing
-            float deltaX = smoothedDeltaX;
-            float deltaY = smoothedDeltaY;
+            // Calculate new unclamped position
+            Vector2 newPos = new Vector2(startPos.x + smoothedDeltaX, startPos.y + smoothedDeltaY);
 
-            // update the main shape's size and position
-            rb.MovePosition(new Vector2(startPos.x + smoothedDeltaX, startPos.y + smoothedDeltaY)); 
+            // Get half-size of object
+            Vector2 halfSize = spriteRenderer.bounds.size / 2f;
+
+            // clamp relative to parent
+            newPos.x = Mathf.Clamp(newPos.x, parentStartPos.x + topLeft.x + halfSize.x, parentStartPos.x + bottomRight.x - halfSize.x);
+            newPos.y = Mathf.Clamp(newPos.y, parentStartPos.y + bottomRight.y + halfSize.y, parentStartPos.y + topLeft.y - halfSize.y);
+
+            // Move the object
+            rb.MovePosition(newPos);
+
+            // if the object hits the top of the border, do jump thing
+            if (!hitTop && newPos.y + halfSize.y == parentStartPos.y + topLeft.y)
+            {
+                hitTop = true;
+                ReachedMaxHeight?.Invoke(gameObject);
+            }
+            else if (newPos.y + halfSize.y != parentStartPos.y + topLeft.y)
+            {
+                hitTop = false;
+            }
         }
 
-        // if an edge was being resized and the mouse was released
+        // stop moving when mouse released
         if (moving && Input.GetMouseButtonUp(0))
         {
             smoothedDeltaX = 0f;
             smoothedDeltaY = 0f;
-
-            // change the color of the selected edge back to normal
             moving = false;
+            for (int i = 0; i < 4; i++)
+            {
+                bordersLogic[i].SetDisabled();
+            }
         }
     }
 
-    /// <summary>
-    /// checks if the mouse is close to an edge and sets whatever edge it is near
-    /// </summary>
-    /// <returns>wether or not the mouse is near an edge</returns>
     bool ObjectClicked()
     {
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Bounds bounds = spriteRenderer.bounds;
 
-        if (bounds.Contains(mouseWorld))
+        if (mouseWorld.x > bounds.min.x && mouseWorld.x < bounds.max.x && mouseWorld.y > bounds.min.y && mouseWorld.y < bounds.max.y)
         {
             moving = true;
             return true;

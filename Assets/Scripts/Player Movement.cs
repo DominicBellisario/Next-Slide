@@ -45,11 +45,13 @@ public class PlayerMovement : MonoBehaviour
     {
         ObjectScaleLogic.ReachedMaxHeight += CheckIfPlayerIsLaunched;
         ObjectScaleLogic.ChangingHeight += CheckIfPlatformBelowIsChanging;
+        ObjectMoveLogic.ReachedMaxHeight += CheckIfPlayerIsLaunched;
     }
     void OnDisable()
     {
         ObjectScaleLogic.ReachedMaxHeight -= CheckIfPlayerIsLaunched;
         ObjectScaleLogic.ChangingHeight -= CheckIfPlatformBelowIsChanging;
+        ObjectMoveLogic.ReachedMaxHeight -= CheckIfPlayerIsLaunched;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
