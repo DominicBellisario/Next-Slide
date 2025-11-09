@@ -59,13 +59,14 @@ public class ObjectRotateLogic : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!rotating)
-            return;
+        if (!rotating) return;
 
+        float startAngle = rb.rotation;
         // Smoothly rotate toward the target angle using Rigidbody2D
         float newAngle = Mathf.MoveTowardsAngle(rb.rotation, targetAngle, rotationSpeed * Time.fixedDeltaTime);
         rb.MoveRotation(newAngle);
-        ChangingRotation?.Invoke(gameObject, 2f * Time.deltaTime);
+        float deltaAngle = Mathf.DeltaAngle(startAngle, newAngle);
+        if (deltaAngle != float.Epsilon) ChangingRotation?.Invoke(gameObject, Mathf.DeltaAngle(startAngle, newAngle));
     }
 
     bool ObjectClicked()

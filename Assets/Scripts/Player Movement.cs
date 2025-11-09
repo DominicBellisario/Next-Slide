@@ -57,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
         ObjectScaleLogic.ChangingHeight += CheckIfPlatformBelowIsChanging;
         ObjectMoveLogic.ReachedMaxHeight += CheckIfPlayerIsLaunched;
         ObjectMoveLogic.ChangingHeight += CheckIfPlatformBelowIsChanging;
-        ObjectRotateLogic.ChangingRotation += CheckIfPlatformBelowIsChanging;
+        ObjectRotateLogic.ChangingRotation += CheckIfRotatingPlatformIsChanging;
     }
     void OnDisable()
     {
@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
         ObjectScaleLogic.ChangingHeight -= CheckIfPlatformBelowIsChanging;
         ObjectMoveLogic.ReachedMaxHeight -= CheckIfPlayerIsLaunched;
         ObjectMoveLogic.ChangingHeight -= CheckIfPlatformBelowIsChanging;
-        ObjectRotateLogic.ChangingRotation -= CheckIfPlatformBelowIsChanging;
+        ObjectRotateLogic.ChangingRotation -= CheckIfRotatingPlatformIsChanging;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -192,6 +192,36 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(new Vector2(0f, objectLaunchUpForce));
             Debug.Log("jump");
         }
+    }
+
+    private void CheckIfRotatingPlatformIsChanging(GameObject platformObj, float deltaAngle)
+    {
+        RaycastHit2D hit = DownCircleCast(0.5f, centerCollider.includeLayers);
+        if (hit.collider && hit.collider.gameObject == platformObj)
+        {
+            // Convert to radians (for Mathf trig)
+            float radians = deltaAngle * Mathf.Deg2Rad;
+
+            // Vector from pivot to player (in world space)
+            Vector2 pivotToPlayer = (Vector2)(transform.position - platformObj.transform.position);
+
+            // Compute where that point moves when the platform rotates by deltaAngle
+            // Rotation direction in Unity is counter-clockwise positive
+            Vector2 rotated = new Vector2(
+                pivotToPlayer.x * Mathf.Cos(radians) - pivotToPlayer.y * Mathf.Sin(radians),
+                pivotToPlayer.x * Mathf.Sin(radians) + pivotToPlayer.y * Mathf.Cos(radians)
+            );
+
+            // Displacement caused by rotation
+            Vector2 delta = rotated - pivotToPlayer;
+
+            // The height (Y) difference is what you care about
+            float heightChange = delta.y;
+
+            // Apply it
+            pendingVerticalOffset += heightChange;
+        }
+
     }
 
     private void CheckIfPlatformBelowIsChanging(GameObject platformObj, float heightChange)
