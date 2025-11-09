@@ -1135,9 +1135,9 @@ MonoBehaviour:
   centerCollider: {fileID: 1797968028}
   rightCollider: {fileID: 1540624603}
   accelNormal: 200
-  maxSpeedNormal: 5
+  maxSpeedNormal: 3
   accelImpact: 500
-  maxSpeedImpact: 8
+  maxSpeedImpact: 5
   bounceBackForceNormal: {x: 200, y: 150}
   bounceBackForceImpact: {x: 600, y: 200}
   objectLaunchUpForce: 300

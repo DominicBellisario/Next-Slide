@@ -111,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         // bounce back if a side collider hits an object that is NOT the object the player is standing on
-        if (collision.otherCollider != centerCollider && collision.collider != DownRaycast(0.4f, centerCollider.includeLayers).collider)
+        if (collision.otherCollider != centerCollider && collision.collider != DownCircleCast(0.4f, centerCollider.includeLayers).collider)
         {
             switch (currentState)
             {
@@ -144,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckIfPlayerIsLaunched(GameObject gameObject)
     {
-        RaycastHit2D hit = DownRaycast(0.05f, centerCollider.includeLayers);
+        RaycastHit2D hit = DownCircleCast(0.05f, centerCollider.includeLayers);
         if (!canLaunch || hit.collider == null) return;
         if (hit.collider.gameObject == gameObject)
         {
@@ -160,7 +160,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckIfPlatformBelowIsChanging(GameObject platformObj, float heightChange)
     {
-        RaycastHit2D hit = DownRaycast(0.2f, centerCollider.includeLayers);
+        RaycastHit2D hit = DownCircleCast(0.2f, centerCollider.includeLayers);
         if (hit.collider && hit.collider.gameObject == platformObj)
         {
             pendingVerticalOffset += heightChange;
@@ -182,9 +182,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private RaycastHit2D DownRaycast(float offset, LayerMask layerMask)
+    private RaycastHit2D DownCircleCast(float offset, LayerMask layerMask)
     {
-        return Physics2D.Raycast(transform.position, -Vector2.up, centerCollider.bounds.extents.y + offset, layerMask);
+        return Physics2D.CircleCast(transform.position, 0.3f, Vector2.down, centerCollider.bounds.extents.y + offset - 0.3f, layerMask);
     }
 
     private IEnumerator PerformFlipH()
@@ -200,4 +200,10 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = startVelocity * Vector2.left;
         FlipH?.Invoke();
     }
+
+    // void OnDrawGizmos()
+    // {
+    //     Vector3 center = new Vector3(transform.position.x, transform.position.y - centerCollider.bounds.extents.y - 0.2f + 0.3f, 0f);
+    //     Gizmos.DrawWireSphere(center, 0.3f);
+    // }
 }
