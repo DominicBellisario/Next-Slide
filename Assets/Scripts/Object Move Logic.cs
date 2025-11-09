@@ -25,6 +25,7 @@ public class ObjectMoveLogic : MonoBehaviour
     float smoothedDeltaX;
     float smoothedDeltaY;
     Vector2 startPos;
+    float lastFrameHeight;
     Vector3 parentStartPos;
     bool hitTop;
 
@@ -59,6 +60,7 @@ public class ObjectMoveLogic : MonoBehaviour
         {
             startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             startPos = rb.position;
+            lastFrameHeight = startPos.y;
             for (int i = 0; i < 4; i++)
             {
                 bordersLogic[i].SetEnabled();
@@ -74,7 +76,7 @@ public class ObjectMoveLogic : MonoBehaviour
 
             smoothedDeltaX = Mathf.MoveTowards(smoothedDeltaX, targetDeltaX, maxMoveSpeed * Time.deltaTime);
             smoothedDeltaY = Mathf.MoveTowards(smoothedDeltaY, targetDeltaY, maxMoveSpeed * Time.deltaTime);
-
+            
             // Calculate new unclamped position
             Vector2 newPos = new Vector2(startPos.x + smoothedDeltaX, startPos.y + smoothedDeltaY);
 
@@ -87,6 +89,9 @@ public class ObjectMoveLogic : MonoBehaviour
 
             // Move the object
             rb.MovePosition(newPos);
+
+            ChangingHeight?.Invoke(gameObject, newPos.y - lastFrameHeight);
+            lastFrameHeight = newPos.y;
 
             // if the object hits the top of the border, do jump thing
             if (!hitTop && newPos.y + halfSize.y == parentStartPos.y + topLeft.y)
