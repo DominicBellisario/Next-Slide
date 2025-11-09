@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,9 +18,15 @@ public class Helper : MonoBehaviour
         LoadingScene?.Invoke();
         SceneManager.LoadScene(sceneName);
     }
-    
+
     public static void ReloadScene()
     {
         LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
+    public static void LoadNextSlide()
+    {
+        int currentSlideNumber = int.Parse(SceneManager.GetActiveScene().name[^1].ToString());
+        LoadScene("L1S" + (currentSlideNumber + 1));
     }
 }
