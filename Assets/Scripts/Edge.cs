@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class EdgeLogic : MonoBehaviour
+public class Edge : MonoBehaviour
 {
     [SerializeField] Color selectedColor;
     SpriteRenderer sprite;

@@ -8,6 +8,8 @@ TagManager:
   - Border
   - FlipH
   - SpeedPanel
+  - Target
+  - ImpactObject
   layers:
   - Default
   - TransparentFX

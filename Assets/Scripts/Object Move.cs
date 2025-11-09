@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class ObjectMoveLogic : MonoBehaviour
+public class ObjectMove : MonoBehaviour
 {
     public static event Action<GameObject> ReachedMaxHeight;
     public static event Action<GameObject, float> ChangingHeight;
@@ -18,7 +18,7 @@ public class ObjectMoveLogic : MonoBehaviour
     [SerializeField] GameObject[] borders;
     SpriteRenderer spriteRenderer;
     SpriteRenderer[] borderSprites;
-    EdgeLogic[] bordersLogic;
+    Edge[] bordersLogic;
     Rigidbody2D rb;
     bool moving;
     Vector3 startMousePos;
@@ -35,13 +35,13 @@ public class ObjectMoveLogic : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         moving = false;
         borderSprites = new SpriteRenderer[4];
-        bordersLogic = new EdgeLogic[4];
+        bordersLogic = new Edge[4];
         parentStartPos = GetComponentInParent<Transform>().position;
         hitTop = false;
         for (int i = 0; i < 4; i++)
         {
             borderSprites[i] = borders[i].GetComponent<SpriteRenderer>();
-            bordersLogic[i] = borders[i].GetComponent<EdgeLogic>();
+            bordersLogic[i] = borders[i].GetComponent<Edge>();
         }
         borders[TOP].transform.localPosition = new Vector3((bottomRight.x + topLeft.x) / 2, topLeft.y, 0f);
         borders[RIGHT].transform.localPosition = new Vector3(bottomRight.x, (bottomRight.y + topLeft.y) / 2, 0f);

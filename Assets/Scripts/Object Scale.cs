@@ -1,11 +1,10 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class ObjectScaleLogic : MonoBehaviour
+public class ObjectScale : MonoBehaviour
 {
     public static event Action<GameObject> ReachedMaxHeight;
     public static event Action<GameObject, float> ChangingHeight;
@@ -40,11 +39,11 @@ public class ObjectScaleLogic : MonoBehaviour
     Vector3[] edgesStartPos;
     Vector2[] edgesStartSize;
     SpriteRenderer[] edgesSpriteRenderer;
-    EdgeLogic[] edgesLogic;
+    Edge[] edgesLogic;
 
     Vector3 objectStartPos;
     SpriteRenderer[] bordersSpriteRenderer;
-    EdgeLogic[] bordersLogic;
+    Edge[] bordersLogic;
     float maxWidthExcludingStartWidth;
     float maxHeightExcludingStartHeight;
 
@@ -78,9 +77,9 @@ public class ObjectScaleLogic : MonoBehaviour
         edgesStartPos = new Vector3[4];
         edgesStartSize = new Vector2[4];
         edgesSpriteRenderer = new SpriteRenderer[4];
-        edgesLogic = new EdgeLogic[4];
+        edgesLogic = new Edge[4];
         bordersSpriteRenderer = new SpriteRenderer[4];
-        bordersLogic = new EdgeLogic[4];
+        bordersLogic = new Edge[4];
         objectStartPos = transform.position;
         maxWidthExcludingStartWidth = maxWidth - (spriteRenderer.size.x / 2);
         maxHeightExcludingStartHeight = maxHeight - (spriteRenderer.size.y / 2);
@@ -90,10 +89,10 @@ public class ObjectScaleLogic : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             edgesSpriteRenderer[i] = edges[i].GetComponent<SpriteRenderer>();
-            edgesLogic[i] = edges[i].GetComponent<EdgeLogic>();
+            edgesLogic[i] = edges[i].GetComponent<Edge>();
 
             bordersSpriteRenderer[i] = borders[i].GetComponent<SpriteRenderer>();
-            bordersLogic[i] = borders[i].GetComponent<EdgeLogic>();
+            bordersLogic[i] = borders[i].GetComponent<Edge>();
 
             // if an edge is not editable, make it invisible
             if (!editableEdges[i])

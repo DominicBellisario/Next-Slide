@@ -1,8 +1,5 @@
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
-using NUnit.Framework.Internal.Commands;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum PlayerState
@@ -17,10 +14,13 @@ public enum PlayerState
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
+    public static event Action ImpactState;
+    public static event Action NormalState;
     public static event Action BounceBackNormal;
     public static event Action BounceBackImpact;
     public static event Action FlipH;
     public static event Action SpeedPanel;
+    public static event Action HitTarget;
 
     [Header("Colliders")]
     [SerializeField] Collider2D leftCollider;
@@ -53,19 +53,19 @@ public class PlayerMovement : MonoBehaviour
 
     void OnEnable()
     {
-        ObjectScaleLogic.ReachedMaxHeight += CheckIfPlayerIsLaunched;
-        ObjectScaleLogic.ChangingHeight += CheckIfPlatformBelowIsChanging;
-        ObjectMoveLogic.ReachedMaxHeight += CheckIfPlayerIsLaunched;
-        ObjectMoveLogic.ChangingHeight += CheckIfPlatformBelowIsChanging;
-        ObjectRotateLogic.ChangingRotation += CheckIfRotatingPlatformIsChanging;
+        ObjectScale.ReachedMaxHeight += CheckIfPlayerIsLaunched;
+        ObjectScale.ChangingHeight += CheckIfPlatformBelowIsChanging;
+        ObjectMove.ReachedMaxHeight += CheckIfPlayerIsLaunched;
+        ObjectMove.ChangingHeight += CheckIfPlatformBelowIsChanging;
+        ObjectRotate.ChangingRotation += CheckIfRotatingPlatformIsChanging;
     }
     void OnDisable()
     {
-        ObjectScaleLogic.ReachedMaxHeight -= CheckIfPlayerIsLaunched;
-        ObjectScaleLogic.ChangingHeight -= CheckIfPlatformBelowIsChanging;
-        ObjectMoveLogic.ReachedMaxHeight -= CheckIfPlayerIsLaunched;
-        ObjectMoveLogic.ChangingHeight -= CheckIfPlatformBelowIsChanging;
-        ObjectRotateLogic.ChangingRotation -= CheckIfRotatingPlatformIsChanging;
+        ObjectScale.ReachedMaxHeight -= CheckIfPlayerIsLaunched;
+        ObjectScale.ChangingHeight -= CheckIfPlatformBelowIsChanging;
+        ObjectMove.ReachedMaxHeight -= CheckIfPlayerIsLaunched;
+        ObjectMove.ChangingHeight -= CheckIfPlatformBelowIsChanging;
+        ObjectRotate.ChangingRotation -= CheckIfRotatingPlatformIsChanging;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -95,7 +95,6 @@ public class PlayerMovement : MonoBehaviour
                 break;
             // player is launched back in the opposite direction
             case PlayerState.BounceBackNormal:
-                Debug.Log("Bounce Back Normal");
                 rb.linearVelocity = Vector2.zero;
                 //move them manually back a bit (this is to get them out quick if the player quickly moves a block over them)
                 rb.position += new Vector2(0.1f * -facingRight, 0f);
@@ -106,14 +105,13 @@ public class PlayerMovement : MonoBehaviour
                 break;
             // player is launched back a lot in the opposite direction
             case PlayerState.BounceBackImpact:
-                Debug.Log("Bounce Back Impact");
                 rb.linearVelocity = Vector2.zero;
                 //move them manually back a bit (this is to get them out quick if the player quickly moves a block over them)
                 rb.position += new Vector2(0.1f * -facingRight, 0f);
                 rb.AddForce(bounceBackForceImpact * new Vector2(-facingRight, normalGravity));
                 BounceBackImpact?.Invoke();
 
-                StunPlayer(stunTimeImpact, PlayerState.Impact);
+                StunPlayer(stunTimeImpact, PlayerState.Normal);
                 break;
             // player does not try to move for a time
             case PlayerState.Stunned:
@@ -129,14 +127,39 @@ public class PlayerMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // bounce back if a side collider hits an object that is NOT the object the player is standing on
-        if (collision.otherCollider != centerCollider && collision.collider != DownCircleCast(0.4f, centerCollider.includeLayers).collider)
+        // if the side of the player is not hitting the object, return
+        if (collision.collider == DownCircleCast(0.4f, centerCollider.includeLayers).collider) return;
+
+        // player side colliders hit the side of an impact object
+        if (collision.collider.CompareTag("ImpactObject"))
         {
             switch (currentState)
             {
+                // bounce back
+                case PlayerState.Normal:
+                    collision.collider.GetComponent<ObjectImpact>().HitObject();
+                    currentState = PlayerState.BounceBackNormal;
+                    break;
+                // destroy the object
+                case PlayerState.Impact:
+                    collision.collider.GetComponent<ObjectImpact>().DestroyObject();
+                    break;
+                default:
+                    collision.collider.GetComponent<ObjectImpact>().HitObject();
+                    currentState = PlayerState.BounceBackNormal;
+                    break;
+            }
+        }
+        // player side colliders hit the side of a normal object
+        else
+        {
+            switch (currentState)
+            {
+                // bounce back a little
                 case PlayerState.Normal:
                     currentState = PlayerState.BounceBackNormal;
                     break;
+                // bounce back a lot
                 case PlayerState.Impact:
                     currentState = PlayerState.BounceBackImpact;
                     break;
@@ -144,8 +167,8 @@ public class PlayerMovement : MonoBehaviour
                     currentState = PlayerState.BounceBackNormal;
                     break;
             }
-
         }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -158,6 +181,12 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.linearVelocityX = maxSpeedImpact * facingRight;
             currentState = PlayerState.Impact;
+            SpeedPanel?.Invoke();
+        }
+        else if (collision.CompareTag("Target"))
+        {
+            HitTarget?.Invoke();
+            Helper.ReloadScene();
         }
     }
 
@@ -171,10 +200,8 @@ public class PlayerMovement : MonoBehaviour
 
             // Return movement along the slope
             Vector2 adjustedForce = Mathf.Sign(startForce.x) * startForce.magnitude * tangent.normalized;
-            Debug.Log(adjustedForce);
             return adjustedForce;
         }
-        Debug.Log(startForce);
         return startForce;
     }
 

@@ -5,10 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
-public class ObjectRotateLogic : MonoBehaviour
+public class ObjectRotate : MonoBehaviour
 {
     public static event Action<GameObject, float> ChangingRotation;
-    [SerializeField] EdgeLogic arrow;
+    [SerializeField] Edge arrow;
     [SerializeField] float rotationSpeed = 360f; // degrees per second
     SpriteRenderer spriteRenderer;
     Rigidbody2D rb;
