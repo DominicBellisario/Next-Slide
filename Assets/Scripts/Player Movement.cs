@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Data;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum PlayerState
@@ -129,6 +131,8 @@ public class PlayerMovement : MonoBehaviour
     {
         // if the side of the player is not hitting the object, return
         if (collision.collider == DownCircleCast(0.4f, centerCollider.includeLayers).collider) return;
+        if (collision.otherCollider.name == "Left" && facingRight == 1) return;
+        if (collision.otherCollider.name == "Right" && facingRight == -1) return;
 
         // player side colliders hit the side of an impact object
         if (collision.collider.CompareTag("ImpactObject"))
@@ -173,9 +177,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("FlipH"))
+        if (collision.CompareTag("FlipHLeft"))
         {
-            StartCoroutine(PerformFlipH());
+            StartCoroutine(PerformFlipH(-1));
+        }
+        else if (collision.CompareTag("FlipHRight"))
+        {
+            StartCoroutine(PerformFlipH(1));
         }
         else if (collision.CompareTag("SpeedPanel"))
         {
@@ -217,7 +225,6 @@ public class PlayerMovement : MonoBehaviour
             StartCoroutine(Helper.DoThisAfterDelay(() => centerCollider.enabled = true, 0.5f));
             rb.linearVelocityY = 0f;
             rb.AddForce(new Vector2(0f, objectLaunchUpForce));
-            Debug.Log("jump");
         }
     }
 
@@ -280,7 +287,7 @@ public class PlayerMovement : MonoBehaviour
         return Physics2D.CircleCast(transform.position, 0.3f, Vector2.down, centerCollider.bounds.extents.y + offset - 0.3f, layerMask);
     }
 
-    private IEnumerator PerformFlipH()
+    private IEnumerator PerformFlipH(int direction)
     {
         Vector2 startVelocity = rb.linearVelocity;
         rb.linearVelocity = Vector2.zero;
@@ -289,7 +296,7 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-        facingRight *= -1;
+        facingRight = direction;
         rb.linearVelocity = startVelocity * Vector2.left;
         FlipH?.Invoke();
     }

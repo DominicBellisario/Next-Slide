@@ -99,8 +99,8 @@ GameObject:
   - component: {fileID: 7536485353874405010}
   - component: {fileID: 2268730879171122005}
   m_Layer: 7
-  m_Name: FlipH
-  m_TagString: FlipH
+  m_Name: FlipHRight
+  m_TagString: FlipHRight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

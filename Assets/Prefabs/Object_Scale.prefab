@@ -285,9 +285,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4237281293129995525}
   - component: {fileID: 8073276945196679593}
+  - component: {fileID: 5892365548978695296}
   - component: {fileID: 6850629220425361376}
   - component: {fileID: 8332769553718048726}
-  - component: {fileID: 5892365548978695296}
   m_Layer: 6
   m_Name: Object_Scale
   m_TagString: Object
@@ -367,7 +367,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7568628, g: 0.7568628, b: 0.7568628, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
@@ -377,6 +377,40 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5892365548978695296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3112319762583908379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06b4fc820ea06f54abcbdeeb47ee884c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickRange: 0.2
+  maxResizeSpeed: 20
+  minWidth: 0.5
+  maxWidth: 5
+  minHeight: 0.5
+  maxHeight: 5
+  editableEdges: 01010101
+  knobs:
+  - {fileID: 422825515647130042}
+  - {fileID: 185235123646517407}
+  - {fileID: 6121804415691462178}
+  - {fileID: 6922933934678084283}
+  edges:
+  - {fileID: 7268801496148430101}
+  - {fileID: 3330369530660213193}
+  - {fileID: 2410051291806768793}
+  - {fileID: 3757200255673472639}
+  borders:
+  - {fileID: 6297401814272202529}
+  - {fileID: 5827569305541083834}
+  - {fileID: 9114021747334692648}
+  - {fileID: 5501622128765813463}
 --- !u!50 &6850629220425361376
 Rigidbody2D:
   serializedVersion: 5
@@ -450,40 +484,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &5892365548978695296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3112319762583908379}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06b4fc820ea06f54abcbdeeb47ee884c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clickRange: 0.2
-  maxResizeSpeed: 20
-  minWidth: 0.5
-  maxWidth: 5
-  minHeight: 0.5
-  maxHeight: 5
-  editableEdges: 01010101
-  knobs:
-  - {fileID: 422825515647130042}
-  - {fileID: 185235123646517407}
-  - {fileID: 6121804415691462178}
-  - {fileID: 6922933934678084283}
-  edges:
-  - {fileID: 7268801496148430101}
-  - {fileID: 3330369530660213193}
-  - {fileID: 2410051291806768793}
-  - {fileID: 3757200255673472639}
-  borders:
-  - {fileID: 6297401814272202529}
-  - {fileID: 5827569305541083834}
-  - {fileID: 9114021747334692648}
-  - {fileID: 5501622128765813463}
 --- !u!1 &3330369530660213193
 GameObject:
   m_ObjectHideFlags: 0

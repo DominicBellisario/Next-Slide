@@ -299,9 +299,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7265305111897546132}
   - component: {fileID: 4804609028389756231}
+  - component: {fileID: 1348014025230732514}
   - component: {fileID: 7890725440585849826}
   - component: {fileID: 1402453574544643924}
-  - component: {fileID: 1348014025230732514}
   m_Layer: 6
   m_Name: Object
   m_TagString: Object
@@ -370,7 +370,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5294118, g: 0.5294118, b: 0.5294118, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
@@ -380,6 +380,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1348014025230732514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5526099236679032689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39a6f2bf9d969fc49af035f7ccd83023, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxMoveSpeed: 20
+  topLeft: {x: -4, y: 4}
+  bottomRight: {x: 4, y: -4}
+  borders:
+  - {fileID: 8772549397428131804}
+  - {fileID: 525248861607149496}
+  - {fileID: 1412598221650375781}
+  - {fileID: 7565767592056835119}
 --- !u!50 &7890725440585849826
 Rigidbody2D:
   serializedVersion: 5
@@ -450,29 +470,9 @@ BoxCollider2D:
     adaptiveTilingThreshold: 0.5
     drawMode: 2
     adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_AutoTiling: 1
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1348014025230732514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5526099236679032689}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39a6f2bf9d969fc49af035f7ccd83023, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxMoveSpeed: 20
-  topLeft: {x: -4, y: 4}
-  bottomRight: {x: 4, y: -4}
-  borders:
-  - {fileID: 8772549397428131804}
-  - {fileID: 525248861607149496}
-  - {fileID: 1412598221650375781}
-  - {fileID: 7565767592056835119}
 --- !u!1 &7545938009808800678
 GameObject:
   m_ObjectHideFlags: 0
