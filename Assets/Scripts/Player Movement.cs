@@ -10,7 +10,8 @@ public enum PlayerState
     Normal,
     Impact,
     BounceBackNormal,
-    BounceBackImpact
+    BounceBackImpact,
+    Stunned
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -21,18 +22,24 @@ public class PlayerMovement : MonoBehaviour
     public static event Action FlipH;
     public static event Action SpeedPanel;
 
+    [Header("Colliders")]
     [SerializeField] Collider2D leftCollider;
     [SerializeField] Collider2D centerCollider;
     [SerializeField] Collider2D rightCollider;
-
+    [Header("Normal")]
     [SerializeField] float accelNormal;
     [SerializeField] float maxSpeedNormal;
+    [SerializeField] Vector2 bounceBackForceNormal;
+    [Header("Impact")]
     [SerializeField] float accelImpact;
     [SerializeField] float maxSpeedImpact;
-    [SerializeField] Vector2 bounceBackForceNormal;
     [SerializeField] Vector2 bounceBackForceImpact;
+    [Header("Stun")]
+    [SerializeField] float stunDecceleration;
+    [SerializeField] float stunTimeNormal;
+    [SerializeField] float stunTimeImpact;
+    [Header("Misc")]
     [SerializeField] float objectLaunchUpForce;
-
 
     Rigidbody2D rb;
     int facingRight;
@@ -40,6 +47,9 @@ public class PlayerMovement : MonoBehaviour
     private PlayerState currentState;
     bool canLaunch;
     float pendingVerticalOffset;
+    float currentStunTime;
+    float stunTimer;
+    PlayerState nextState;
 
     void OnEnable()
     {
@@ -75,12 +85,12 @@ public class PlayerMovement : MonoBehaviour
         {
             // player moves forward at a normal acceleration with a normal max speed
             case PlayerState.Normal:
-                rb.AddForce(accelNormal * facingRight * Time.deltaTime * Vector2.right);
+                rb.AddForce(NormalAlignedForce(accelNormal * facingRight * Vector2.right));
                 rb.linearVelocity = new Vector2(Mathf.Clamp(rb.linearVelocityX, -maxSpeedNormal, maxSpeedNormal), rb.linearVelocityY);
                 break;
             // player moves forward at a fast acceleration with a fast max speed
             case PlayerState.Impact:
-                rb.AddForce(accelImpact * facingRight * Time.deltaTime * Vector2.right);
+                rb.AddForce(NormalAlignedForce(accelImpact * facingRight * Vector2.right));
                 rb.linearVelocity = new Vector2(Mathf.Clamp(rb.linearVelocityX, -maxSpeedImpact, maxSpeedImpact), rb.linearVelocityY);
                 break;
             // player is launched back in the opposite direction
@@ -92,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
                 rb.AddForce(bounceBackForceNormal * new Vector2(-facingRight, normalGravity));
                 BounceBackNormal?.Invoke();
 
-                currentState = PlayerState.Normal;
+                StunPlayer(stunTimeNormal, PlayerState.Normal);
                 break;
             // player is launched back a lot in the opposite direction
             case PlayerState.BounceBackImpact:
@@ -103,7 +113,16 @@ public class PlayerMovement : MonoBehaviour
                 rb.AddForce(bounceBackForceImpact * new Vector2(-facingRight, normalGravity));
                 BounceBackImpact?.Invoke();
 
-                currentState = PlayerState.Normal;
+                StunPlayer(stunTimeImpact, PlayerState.Impact);
+                break;
+            // player does not try to move for a time
+            case PlayerState.Stunned:
+                if (stunTimer < currentStunTime)
+                {
+                    stunTimer += Time.deltaTime;
+                    rb.AddForce(new Vector2(-Mathf.Sign(rb.linearVelocityX) * stunDecceleration, 0f));
+                }
+                else { currentState = nextState; }
                 break;
         }
     }
@@ -125,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
                     currentState = PlayerState.BounceBackNormal;
                     break;
             }
-            
+
         }
     }
 
@@ -140,6 +159,23 @@ public class PlayerMovement : MonoBehaviour
             rb.linearVelocityX = maxSpeedImpact * facingRight;
             currentState = PlayerState.Impact;
         }
+    }
+
+    private Vector2 NormalAlignedForce(Vector2 startForce)
+    {
+        RaycastHit2D hit = DownCircleCast(0.2f, centerCollider.includeLayers);
+        if (hit.collider)
+        {
+            // Project the force perpendicular to the normal
+            Vector2 tangent = new(hit.normal.y, -hit.normal.x);
+
+            // Return movement along the slope
+            Vector2 adjustedForce = Mathf.Sign(startForce.x) * startForce.magnitude * tangent.normalized;
+            Debug.Log(adjustedForce);
+            return adjustedForce;
+        }
+        Debug.Log(startForce);
+        return startForce;
     }
 
     private void CheckIfPlayerIsLaunched(GameObject gameObject)
@@ -199,6 +235,14 @@ public class PlayerMovement : MonoBehaviour
         facingRight *= -1;
         rb.linearVelocity = startVelocity * Vector2.left;
         FlipH?.Invoke();
+    }
+
+    public void StunPlayer(float stunTime, PlayerState _nextState)
+    {
+        stunTimer = 0;
+        currentStunTime = stunTime;
+        nextState = _nextState;
+        currentState = PlayerState.Stunned;
     }
 
     // void OnDrawGizmos()
