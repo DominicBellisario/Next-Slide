@@ -286,7 +286,7 @@ public class PlayerMovement : MonoBehaviour
 
     private RaycastHit2D DownCircleCast(float offset, LayerMask layerMask)
     {
-        return Physics2D.CircleCast(transform.position, 0.3f, Vector2.down, centerCollider.bounds.extents.y + offset - 0.3f, layerMask);
+        return Physics2D.CircleCast(transform.position, 0.2f, Vector2.down, centerCollider.bounds.extents.y + offset - 0.2f, layerMask);
     }
 
     private IEnumerator PerformFlipH(int direction)

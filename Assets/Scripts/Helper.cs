@@ -23,10 +23,17 @@ public class Helper : MonoBehaviour
     {
         LoadScene(SceneManager.GetActiveScene().name);
     }
-    
+
     public static void LoadNextSlide()
     {
-        int currentSlideNumber = int.Parse(SceneManager.GetActiveScene().name[^1].ToString());
-        LoadScene("L1S" + (currentSlideNumber + 1));
+        // get the current slide and level number
+        int currentSlideNumber = 10 * int.Parse(SceneManager.GetActiveScene().name[^2].ToString()) + int.Parse(SceneManager.GetActiveScene().name[^1].ToString());
+        string currentLevelString = SceneManager.GetActiveScene().name[^6].ToString() + SceneManager.GetActiveScene().name[^5].ToString();
+        string nextSlideString;
+        // format correctly
+        if (currentSlideNumber < 9) { nextSlideString = "0" + (currentSlideNumber + 1); }
+        else { nextSlideString = "" + (currentSlideNumber + 1); }
+        // put together scene name
+        LoadScene("L" + currentLevelString + "_S" + nextSlideString);
     }
 }
