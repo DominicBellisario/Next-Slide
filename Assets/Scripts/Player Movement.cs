@@ -102,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
                 rb.position += new Vector2(0.1f * -facingRight, 0f);
                 rb.AddForce(bounceBackForceNormal * new Vector2(-facingRight, normalGravity));
                 BounceBackNormal?.Invoke();
-
+                Debug.Log("bounce");
                 StunPlayer(stunTimeNormal, PlayerState.Normal);
                 break;
             // player is launched back a lot in the opposite direction
@@ -121,6 +121,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     stunTimer += Time.deltaTime;
                     rb.AddForce(new Vector2(-Mathf.Sign(rb.linearVelocityX) * stunDecceleration, 0f));
+                    rb.linearVelocity = new Vector2(Mathf.Clamp(rb.linearVelocityX, -maxSpeedNormal, maxSpeedNormal), rb.linearVelocityY);
                 }
                 else { currentState = nextState; }
                 break;
@@ -131,9 +132,10 @@ public class PlayerMovement : MonoBehaviour
     {
         // if the side of the player is not hitting the object, return
         if (collision.collider == DownCircleCast(0.4f, centerCollider.includeLayers).collider) return;
+        if (collision.otherCollider.name == "Center") return;
         if (collision.otherCollider.name == "Left" && facingRight == 1) return;
         if (collision.otherCollider.name == "Right" && facingRight == -1) return;
-
+        
         // player side colliders hit the side of an impact object
         if (collision.collider.CompareTag("ImpactObject"))
         {
