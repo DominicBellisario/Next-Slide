@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Data;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum PlayerState
@@ -10,7 +8,8 @@ public enum PlayerState
     Impact,
     BounceBackNormal,
     BounceBackImpact,
-    Stunned
+    Stunned,
+    Target
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -21,7 +20,6 @@ public class PlayerMovement : MonoBehaviour
     public static event Action BounceBackNormal;
     public static event Action BounceBackImpact;
     public static event Action FlipH;
-    public static event Action SpeedPanel;
     public static event Action HitTarget;
 
     [Header("Colliders")]
@@ -112,7 +110,7 @@ public class PlayerMovement : MonoBehaviour
                 rb.position += new Vector2(0.1f * -facingRight, 0f);
                 rb.AddForce(bounceBackForceImpact * new Vector2(-facingRight, normalGravity));
                 BounceBackImpact?.Invoke();
-
+                Debug.Log("bounce impact");
                 StunPlayer(stunTimeImpact, PlayerState.Normal);
                 break;
             // player does not try to move for a time
@@ -124,6 +122,10 @@ public class PlayerMovement : MonoBehaviour
                     rb.linearVelocity = new Vector2(Mathf.Clamp(rb.linearVelocityX, -maxSpeedNormal, maxSpeedNormal), rb.linearVelocityY);
                 }
                 else { currentState = nextState; }
+                break;
+            // player slows to a stop
+            case PlayerState.Target:
+                //nada 
                 break;
         }
     }
@@ -191,10 +193,10 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.linearVelocityX = maxSpeedImpact * facingRight;
             currentState = PlayerState.Impact;
-            SpeedPanel?.Invoke();
         }
         else if (collision.CompareTag("Target"))
         {
+            currentState = PlayerState.Target;
             HitTarget?.Invoke();
         }
     }
@@ -216,7 +218,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckIfPlayerIsLaunched(GameObject gameObject)
     {
-        RaycastHit2D hit = DownCircleCast(0.05f, centerCollider.includeLayers);
+        RaycastHit2D hit = DownCircleCast(0.05f, rightCollider.includeLayers);
         if (!canLaunch || hit.collider == null) return;
         if (hit.collider.gameObject == gameObject)
         {

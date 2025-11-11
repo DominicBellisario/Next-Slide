@@ -11,15 +11,19 @@ public class CameraMove : MonoBehaviour
     Vector3 startPos;
     [SerializeField] MoveType moveType;
 
-    [Header("Slide")]
-    [SerializeField] float slideTime;
+    [Header("General")]
+    [SerializeField] float effectTime;
+    [SerializeField] Vector3 slideDistance = new(20, 0, 0);
+    [SerializeField] AnimationCurve tChangeCurve;
+
+
     void OnEnable()
     {
-        PlayerMovement.HitTarget += PlayEffect;
+        PlayerEffects.FinishedTargetEffect += PlayCameraEffect;
     }
     void OnDisable()
     {
-        PlayerMovement.HitTarget -= PlayEffect;
+        PlayerEffects.FinishedTargetEffect -= PlayCameraEffect;
     }
 
     void Start()
@@ -27,7 +31,7 @@ public class CameraMove : MonoBehaviour
         startPos = transform.position;
     }
 
-    private void PlayEffect()
+    private void PlayCameraEffect()
     {
         switch (moveType)
         {
@@ -35,6 +39,7 @@ public class CameraMove : MonoBehaviour
                 StartCoroutine(Slide());
                 break;
             case MoveType.ZoomIn:
+                StartCoroutine(ZoomIn());
                 break;
         }
     }
@@ -42,14 +47,28 @@ public class CameraMove : MonoBehaviour
     private IEnumerator Slide()
     {
         float t = 0f;
+        Vector3 finalPos = startPos + slideDistance;
         while (t < 1)
         {
-            transform.position = Vector3.Lerp(startPos, startPos + new Vector3(20f, 0, 0), t);
-            t += Time.deltaTime / slideTime;
+            transform.position = Vector3.Lerp(startPos, finalPos, tChangeCurve.Evaluate(t));
+            t += Time.deltaTime / effectTime;
             yield return null;
         }
-        Debug.Log("finished slide");
+        transform.position = finalPos;
         Helper.LoadNextSlide();
-        
+    }
+
+    private IEnumerator ZoomIn()
+    {
+        float t = 0f;
+        Vector3 finalPos = startPos + slideDistance;
+        while (t < 1)
+        {
+            transform.position = Vector3.Lerp(startPos, finalPos, tChangeCurve.Evaluate(t));
+            t += Time.deltaTime / effectTime;
+            yield return null;
+        }
+        transform.position = finalPos;
+        Helper.LoadNextSlide();
     }
 }

@@ -549,6 +549,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6442412482448895083, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
+      propertyPath: slideDistance.x
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6442412482448895083, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
+      propertyPath: tChangeCurve.m_Curve.Array.data[0].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6442412482448895083, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
+      propertyPath: tChangeCurve.m_Curve.Array.data[1].inSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6442412482448895083, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
+      propertyPath: tChangeCurve.m_Curve.Array.data[0].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6442412482448895083, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
+      propertyPath: tChangeCurve.m_Curve.Array.data[1].outSlope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6442412482448895083, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
+      propertyPath: tChangeCurve.m_Curve.Array.data[0].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6442412482448895083, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
+      propertyPath: tChangeCurve.m_Curve.Array.data[1].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7313885679217057066, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
       propertyPath: m_Name
       value: Main Camera

@@ -618,6 +618,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6442412482448895083, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
+      propertyPath: effectTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6442412482448895083, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
+      propertyPath: slideDistance.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6442412482448895083, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
+      propertyPath: slideDistance.y
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 7313885679217057066, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
       propertyPath: m_Name
       value: Main Camera

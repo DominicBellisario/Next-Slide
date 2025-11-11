@@ -630,6 +630,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6442412482448895083, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
+      propertyPath: slideDistance.y
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 7313885679217057066, guid: 85f0ff5a6e0511d4cb2382415ac1eb9e, type: 3}
       propertyPath: m_Name
       value: Main Camera
@@ -1096,7 +1100,15 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a0fa2f67-8663-40ac-9556-307a8e30fd66
+    m_ActionName: 'Default/Restart Scene[/Keyboard/r]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 606cf220-8f3b-419f-8c64-2794fb12c62f
+    m_ActionName: 'Default/TargetToPlayer[/Keyboard/t]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Default
