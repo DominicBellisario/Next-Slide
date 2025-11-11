@@ -196,7 +196,6 @@ public class PlayerMovement : MonoBehaviour
         else if (collision.CompareTag("Target"))
         {
             HitTarget?.Invoke();
-            Helper.LoadNextSlide();
         }
     }
 
