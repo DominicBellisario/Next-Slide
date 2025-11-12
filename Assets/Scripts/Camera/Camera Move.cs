@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Camera))]
 public class CameraMove : MonoBehaviour
 {
     protected Vector3 startPos;
@@ -7,6 +8,7 @@ public class CameraMove : MonoBehaviour
     protected Camera cam;
 
     [Header("General")]
+    [SerializeField] protected GameObject borderPrefab;
     [SerializeField] protected float effectTime = 1;
     [SerializeField] protected AnimationCurve tChangeCurve;
 
@@ -19,7 +21,7 @@ public class CameraMove : MonoBehaviour
         PlayerEffects.FinishedTargetEffect -= PlayCameraEffect;
     }
 
-    void Start()
+    private void Start()
     {
         cam = GetComponent<Camera>();
         startPos = transform.position;

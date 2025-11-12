@@ -77,6 +77,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ce87d7b5a9e5db45aeb7074f7057864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  borderPrefab: {fileID: 6014598639031827513, guid: 51c37679064139448a626df6e6e77a96, type: 3}
   effectTime: 1
   tChangeCurve:
     serializedVersion: 2

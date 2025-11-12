@@ -8,6 +8,7 @@ public class CamSlide : CameraMove
 
     protected override void PlayCameraEffect()
     {
+        Instantiate(borderPrefab, new Vector3(startPos.x, startPos.y, 0f) + slideDistance, Quaternion.identity);
         base.PlayCameraEffect();
         StartCoroutine(Slide());
     }

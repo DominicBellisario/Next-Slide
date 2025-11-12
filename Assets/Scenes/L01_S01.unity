@@ -813,6 +813,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slide Cam
       objectReference: {fileID: 0}
+    - target: {fileID: 5010922568662972292, guid: 9303c50dbfb380f419b60c0d4a6047e1, type: 3}
+      propertyPath: m_CameraType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7016794534941079378, guid: 9303c50dbfb380f419b60c0d4a6047e1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
