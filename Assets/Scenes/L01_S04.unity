@@ -398,7 +398,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1402453574544643924, guid: a690ee493b0157d48b947751b5571cd1, type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.x
-      value: 2.3007967
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 2773414505258021589, guid: a690ee493b0157d48b947751b5571cd1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -512,6 +512,66 @@ PrefabInstance:
     - target: {fileID: 1906108699664283878, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.minMaxState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[1].value
+      value: 0.16948986
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[0].inSlope
+      value: -0.83051014
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[1].inSlope
+      value: -0.83051014
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[0].inWeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[0].outSlope
+      value: -0.83051014
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[1].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[1].outSlope
+      value: -0.83051014
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[0].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[1].outWeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[0].tangentMode
+      value: 34
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.maxCurve.m_Curve.Array.data[1].tangentMode
+      value: 34
+      objectReference: {fileID: 0}
+    - target: {fileID: 7531609059859376321, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: m_RenderMode
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

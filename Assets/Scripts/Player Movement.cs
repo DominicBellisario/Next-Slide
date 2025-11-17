@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public static event Action BounceBackImpact;
     public static event Action FlipH;
     public static event Action HitTarget;
+    public static event Action LaunchedUp;
 
     [Header("Colliders")]
     [SerializeField] Collider2D leftCollider;
@@ -228,6 +229,7 @@ public class PlayerMovement : MonoBehaviour
             StartCoroutine(Helper.DoThisAfterDelay(() => centerCollider.enabled = true, 0.5f));
             rb.linearVelocityY = 0f;
             rb.AddForce(new Vector2(0f, objectLaunchUpForce));
+            LaunchedUp?.Invoke();
         }
     }
 

@@ -6,10 +6,11 @@ public class Edge : MonoBehaviour
     [SerializeField] Color selectedColor;
     SpriteRenderer sprite;
     Color startColor;
-
+    ParticleSystem ps;
     void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
+        ps = GetComponentInChildren<ParticleSystem>();
         startColor = sprite.color;
     }
 
@@ -21,6 +22,14 @@ public class Edge : MonoBehaviour
     public void ChangeToIdleColor()
     {
         sprite.color = startColor;
+    }
+
+    public void PlayParticle()
+    {
+        var shape = ps.shape;
+        shape.radius = sprite.size.x / 2;
+
+        ps.Play();
     }
 
     public void SetDisabled()

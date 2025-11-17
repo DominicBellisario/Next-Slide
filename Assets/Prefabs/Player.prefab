@@ -138,6 +138,7 @@ Transform:
   m_Children:
   - {fileID: 2539318653082177122}
   - {fileID: 6174555578912672913}
+  - {fileID: 3360356006451404270}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1027955803208237885
@@ -208,6 +209,7 @@ MonoBehaviour:
   targetSlowDownTime: 0.5
   targetWaitTime: 0.5
   impactColor: {r: 0.4245283, g: 0.38265544, b: 0, a: 1}
+  launchParticles: {fileID: 3184899789665946071}
 --- !u!114 &8423464674324107197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -445,3 +447,70 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.33, y: 1.2}
   m_Direction: 0
+--- !u!1001 &1500886091634758073
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 299508172319454998}
+    m_Modifications:
+    - target: {fileID: 4212649098766191703, guid: 72949f0608af14845815436f0969475a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 72949f0608af14845815436f0969475a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.573
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 72949f0608af14845815436f0969475a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 72949f0608af14845815436f0969475a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 72949f0608af14845815436f0969475a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 72949f0608af14845815436f0969475a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 72949f0608af14845815436f0969475a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 72949f0608af14845815436f0969475a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 72949f0608af14845815436f0969475a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 72949f0608af14845815436f0969475a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7109402278937647479, guid: 72949f0608af14845815436f0969475a, type: 3}
+      propertyPath: m_Name
+      value: Player Jump Particles
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 72949f0608af14845815436f0969475a, type: 3}
+--- !u!198 &3184899789665946071 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4100314768646576238, guid: 72949f0608af14845815436f0969475a, type: 3}
+  m_PrefabInstance: {fileID: 1500886091634758073}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3360356006451404270 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4212649098766191703, guid: 72949f0608af14845815436f0969475a, type: 3}
+  m_PrefabInstance: {fileID: 1500886091634758073}
+  m_PrefabAsset: {fileID: 0}

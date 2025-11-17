@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerEffects : MonoBehaviour
 {
     public static event Action FinishedTargetEffect;
@@ -10,7 +11,8 @@ public class PlayerEffects : MonoBehaviour
     [SerializeField] float targetSlowDownTime;
     [SerializeField] float targetWaitTime;
     [SerializeField] Color impactColor;
-
+    [SerializeField] ParticleSystem launchParticles;
+ 
     Rigidbody2D rb;
     Color startColor;
 
@@ -19,12 +21,14 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.NormalState += NormalStateEffects;
         PlayerMovement.ImpactState += ImpactStateEffects;
         PlayerMovement.HitTarget += PlayTargetEffect;
+        PlayerMovement.LaunchedUp += PlayLaunchParticles;
     }
     void OnDisable()
     {
         PlayerMovement.NormalState -= NormalStateEffects;
         PlayerMovement.ImpactState -= ImpactStateEffects;
         PlayerMovement.HitTarget -= PlayTargetEffect;
+        PlayerMovement.LaunchedUp -= PlayLaunchParticles;
     }
 
     void Start()
@@ -56,5 +60,10 @@ public class PlayerEffects : MonoBehaviour
         }
         yield return new WaitForSeconds(targetWaitTime);
         FinishedTargetEffect?.Invoke();
+    }
+
+    private void PlayLaunchParticles()
+    {
+        launchParticles.Play();
     }
 }

@@ -182,7 +182,10 @@ public class ObjectScale : MonoBehaviour
                 smoothedDeltaY = newHeight - startSize.y;
 
                 if (newHeight == maxHeight && newHeight != lastFrameHeight)
+                {
                     ReachedMaxHeight?.Invoke(gameObject);
+                    bordersLogic[TOP].PlayParticle();
+                } 
                 else if (newHeight != lastFrameHeight)
                     ChangingHeight?.Invoke(gameObject, newHeight - lastFrameHeight);
 

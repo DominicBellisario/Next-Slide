@@ -16,6 +16,7 @@ public class ObjectMove : MonoBehaviour
     [SerializeField] Vector2 topLeft;
     [SerializeField] Vector2 bottomRight;
     [SerializeField] GameObject[] borders;
+    [SerializeField] ParticleSystem topParticles;
     SpriteRenderer spriteRenderer;
     SpriteRenderer[] borderSprites;
     Edge[] bordersLogic;
@@ -51,6 +52,10 @@ public class ObjectMove : MonoBehaviour
         borderSprites[RIGHT].size = new Vector2(borderSprites[RIGHT].size.x, Mathf.Abs(bottomRight.y - topLeft.y));
         borderSprites[BOTTOM].size = new Vector2(Mathf.Abs(bottomRight.x - topLeft.x), borderSprites[BOTTOM].size.y);
         borderSprites[LEFT].size = new Vector2(borderSprites[LEFT].size.x, Mathf.Abs(bottomRight.y - topLeft.y));
+        
+        topParticles.transform.localPosition = new Vector3(0f, spriteRenderer.size.y / 2, 0f);
+        var shape = topParticles.shape;
+        shape.radius = spriteRenderer.size.x / 2;
     }
 
     void Update()
@@ -98,6 +103,7 @@ public class ObjectMove : MonoBehaviour
             {
                 hitTop = true;
                 ReachedMaxHeight?.Invoke(gameObject);
+                topParticles.Play();
             }
             else if (newPos.y + halfSize.y != parentStartPos.y + topLeft.y)
             {
