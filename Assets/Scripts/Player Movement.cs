@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public static event Action ImpactState;
     public static event Action NormalState;
-    public static event Action BounceBackNormal;
+    public static event Action<int> BounceBackNormal;
     public static event Action BounceBackImpact;
     public static event Action FlipH;
     public static event Action HitTarget;
@@ -100,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
                 //move them manually back a bit (this is to get them out quick if the player quickly moves a block over them)
                 rb.position += new Vector2(0.1f * -facingRight, 0f);
                 rb.AddForce(bounceBackForceNormal * new Vector2(-facingRight, normalGravity));
-                BounceBackNormal?.Invoke();
+                BounceBackNormal?.Invoke(facingRight);
                 Debug.Log("bounce");
                 StunPlayer(stunTimeNormal, PlayerState.Normal);
                 break;

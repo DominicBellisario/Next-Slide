@@ -12,7 +12,8 @@ public class PlayerEffects : MonoBehaviour
     [SerializeField] float targetWaitTime;
     [SerializeField] Color impactColor;
     [SerializeField] ParticleSystem launchParticles;
- 
+    [SerializeField] ParticleSystem leftLaunchParticles;
+    [SerializeField] ParticleSystem rightLaunchParticles;
     Rigidbody2D rb;
     Color startColor;
 
@@ -22,6 +23,7 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.ImpactState += ImpactStateEffects;
         PlayerMovement.HitTarget += PlayTargetEffect;
         PlayerMovement.LaunchedUp += PlayLaunchParticles;
+        PlayerMovement.BounceBackNormal += PlayBounceParticles;
     }
     void OnDisable()
     {
@@ -29,6 +31,7 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.ImpactState -= ImpactStateEffects;
         PlayerMovement.HitTarget -= PlayTargetEffect;
         PlayerMovement.LaunchedUp -= PlayLaunchParticles;
+        PlayerMovement.BounceBackNormal -= PlayBounceParticles;
     }
 
     void Start()
@@ -65,5 +68,11 @@ public class PlayerEffects : MonoBehaviour
     private void PlayLaunchParticles()
     {
         launchParticles.Play();
+    }
+
+    private void PlayBounceParticles(int direction)
+    {
+        if (direction == 1) { rightLaunchParticles.Play(); }
+        else { leftLaunchParticles.Play(); }
     }
 }
