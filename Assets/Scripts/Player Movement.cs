@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     public static event Action ImpactState;
     public static event Action NormalState;
     public static event Action<int> BounceBackNormal;
-    public static event Action BounceBackImpact;
+    public static event Action<int> BounceBackImpact;
     public static event Action FlipH;
     public static event Action HitTarget;
     public static event Action LaunchedUp;
@@ -79,57 +79,82 @@ public class PlayerMovement : MonoBehaviour
         canLaunch = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
+        // Handle non-physics things:
+
         switch (currentState)
         {
-            // player moves forward at a normal acceleration with a normal max speed
-            case PlayerState.Normal:
-                rb.AddForce(NormalAlignedForce(accelNormal * facingRight * Vector2.right));
-                rb.linearVelocity = new Vector2(Mathf.Clamp(rb.linearVelocityX, -maxSpeedNormal, maxSpeedNormal), rb.linearVelocityY);
-                break;
-            // player moves forward at a fast acceleration with a fast max speed
-            case PlayerState.Impact:
-                rb.AddForce(NormalAlignedForce(accelImpact * facingRight * Vector2.right));
-                rb.linearVelocity = new Vector2(Mathf.Clamp(rb.linearVelocityX, -maxSpeedImpact, maxSpeedImpact), rb.linearVelocityY);
-                break;
-            // player is launched back in the opposite direction
-            case PlayerState.BounceBackNormal:
-                rb.linearVelocity = Vector2.zero;
-                //move them manually back a bit (this is to get them out quick if the player quickly moves a block over them)
-                rb.position += new Vector2(0.1f * -facingRight, 0f);
-                rb.AddForce(bounceBackForceNormal * new Vector2(-facingRight, normalGravity));
-                BounceBackNormal?.Invoke(facingRight);
-                Debug.Log("bounce");
-                StunPlayer(stunTimeNormal, PlayerState.Normal);
-                break;
-            // player is launched back a lot in the opposite direction
-            case PlayerState.BounceBackImpact:
-                rb.linearVelocity = Vector2.zero;
-                //move them manually back a bit (this is to get them out quick if the player quickly moves a block over them)
-                rb.position += new Vector2(0.1f * -facingRight, 0f);
-                rb.AddForce(bounceBackForceImpact * new Vector2(-facingRight, normalGravity));
-                BounceBackImpact?.Invoke();
-                Debug.Log("bounce impact");
-                StunPlayer(stunTimeImpact, PlayerState.Normal);
-                break;
-            // player does not try to move for a time
             case PlayerState.Stunned:
-                if (stunTimer < currentStunTime)
-                {
-                    stunTimer += Time.deltaTime;
-                    rb.AddForce(new Vector2(-Mathf.Sign(rb.linearVelocityX) * stunDecceleration, 0f));
-                    rb.linearVelocity = new Vector2(Mathf.Clamp(rb.linearVelocityX, -maxSpeedNormal, maxSpeedNormal), rb.linearVelocityY);
-                }
-                else { currentState = nextState; }
-                break;
-            // player slows to a stop
-            case PlayerState.Target:
-                //nada 
+                stunTimer += Time.deltaTime;
+                if (stunTimer >= currentStunTime)
+                    currentState = nextState;
                 break;
         }
     }
+
+    void FixedUpdate()
+    {
+        switch (currentState)
+        {
+            case PlayerState.Normal:
+                rb.AddForce(NormalAlignedForce(accelNormal * facingRight * Vector2.right));
+                rb.linearVelocity = new Vector2(
+                    Mathf.Clamp(rb.linearVelocityX, -maxSpeedNormal, maxSpeedNormal),
+                    rb.linearVelocityY
+                );
+                break;
+
+            case PlayerState.Impact:
+                rb.AddForce(NormalAlignedForce(accelImpact * facingRight * Vector2.right));
+                rb.linearVelocity = new Vector2(
+                    Mathf.Clamp(rb.linearVelocityX, -maxSpeedImpact, maxSpeedImpact),
+                    rb.linearVelocityY
+                );
+                break;
+
+            case PlayerState.BounceBackNormal:
+                rb.linearVelocity = Vector2.zero;
+                rb.position += new Vector2(0.1f * -facingRight, 0f);
+                rb.AddForce(bounceBackForceNormal * new Vector2(-facingRight, normalGravity));
+                BounceBackNormal?.Invoke(facingRight);
+                StunPlayer(stunTimeNormal, PlayerState.Normal);
+                break;
+
+            case PlayerState.BounceBackImpact:
+                rb.linearVelocity = Vector2.zero;
+                rb.position += new Vector2(0.1f * -facingRight, 0f);
+                rb.AddForce(bounceBackForceImpact * new Vector2(-facingRight, normalGravity));
+                BounceBackImpact?.Invoke(facingRight);
+                StunPlayer(stunTimeImpact, PlayerState.Normal);
+                break;
+
+            case PlayerState.Stunned:
+                float decel = stunDecceleration * Time.fixedDeltaTime;
+
+                float vx = rb.linearVelocityX;
+                vx -= Mathf.Sign(vx) * decel;
+
+                rb.linearVelocity = new Vector2(
+                    Mathf.Clamp(vx, -maxSpeedNormal, maxSpeedNormal),
+                    rb.linearVelocityY
+                );
+                break;
+        }
+
+        // if there is a pending offet, move the player
+        if (Mathf.Abs(pendingVerticalOffset) > Mathf.Epsilon)
+        {
+            Vector2 newPos = rb.position + new Vector2(0f, pendingVerticalOffset);
+            rb.position = newPos;
+
+            // small downward bias to keep contact solid
+            rb.linearVelocityY = Mathf.Min(rb.linearVelocityY, -0.5f);
+
+            pendingVerticalOffset = 0f;
+        }
+    }
+
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -138,7 +163,7 @@ public class PlayerMovement : MonoBehaviour
         if (collision.otherCollider.name == "Center") return;
         if (collision.otherCollider.name == "Left" && facingRight == 1) return;
         if (collision.otherCollider.name == "Right" && facingRight == -1) return;
-        
+
         // player side colliders hit the side of an impact object
         if (collision.collider.CompareTag("ImpactObject"))
         {
@@ -198,6 +223,9 @@ public class PlayerMovement : MonoBehaviour
         else if (collision.CompareTag("Target"))
         {
             currentState = PlayerState.Target;
+            leftCollider.enabled = false;
+            centerCollider.enabled = false;
+            rightCollider.enabled = false;
             HitTarget?.Invoke();
         }
     }
@@ -269,21 +297,6 @@ public class PlayerMovement : MonoBehaviour
         if (hit.collider && hit.collider.gameObject == platformObj)
         {
             pendingVerticalOffset += heightChange;
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        // if there is a pending offet, move the player
-        if (Mathf.Abs(pendingVerticalOffset) > Mathf.Epsilon)
-        {
-            Vector2 newPos = rb.position + new Vector2(0f, pendingVerticalOffset);
-            rb.position = newPos;
-
-            // small downward bias to keep contact solid
-            rb.linearVelocityY = Mathf.Min(rb.linearVelocityY, -0.5f);
-
-            pendingVerticalOffset = 0f;
         }
     }
 

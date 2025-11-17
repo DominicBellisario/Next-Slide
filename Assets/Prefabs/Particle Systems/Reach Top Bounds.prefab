@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4100314768646576238}
   - component: {fileID: 8958101095247182200}
   m_Layer: 0
-  m_Name: Edge Particles
+  m_Name: Reach Top Bounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

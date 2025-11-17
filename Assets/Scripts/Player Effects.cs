@@ -12,8 +12,10 @@ public class PlayerEffects : MonoBehaviour
     [SerializeField] float targetWaitTime;
     [SerializeField] Color impactColor;
     [SerializeField] ParticleSystem launchParticles;
-    [SerializeField] ParticleSystem leftLaunchParticles;
-    [SerializeField] ParticleSystem rightLaunchParticles;
+    [SerializeField] ParticleSystem leftNormalLaunchParticles;
+    [SerializeField] ParticleSystem rightNormalLaunchParticles;
+    [SerializeField] ParticleSystem leftImpactLaunchParticles;
+    [SerializeField] ParticleSystem rightImpactLaunchParticles;
     Rigidbody2D rb;
     Color startColor;
 
@@ -23,7 +25,8 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.ImpactState += ImpactStateEffects;
         PlayerMovement.HitTarget += PlayTargetEffect;
         PlayerMovement.LaunchedUp += PlayLaunchParticles;
-        PlayerMovement.BounceBackNormal += PlayBounceParticles;
+        PlayerMovement.BounceBackNormal += PlayNormalBounceParticles;
+        PlayerMovement.BounceBackImpact += PlayImpactBounceParticles;
     }
     void OnDisable()
     {
@@ -31,7 +34,8 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.ImpactState -= ImpactStateEffects;
         PlayerMovement.HitTarget -= PlayTargetEffect;
         PlayerMovement.LaunchedUp -= PlayLaunchParticles;
-        PlayerMovement.BounceBackNormal -= PlayBounceParticles;
+        PlayerMovement.BounceBackNormal -= PlayNormalBounceParticles;
+        PlayerMovement.BounceBackImpact -= PlayImpactBounceParticles;
     }
 
     void Start()
@@ -70,9 +74,14 @@ public class PlayerEffects : MonoBehaviour
         launchParticles.Play();
     }
 
-    private void PlayBounceParticles(int direction)
+    private void PlayNormalBounceParticles(int direction)
     {
-        if (direction == 1) { rightLaunchParticles.Play(); }
-        else { leftLaunchParticles.Play(); }
+        if (direction == 1) { rightNormalLaunchParticles.Play(); }
+        else { leftNormalLaunchParticles.Play(); }
+    }
+    private void PlayImpactBounceParticles(int direction)
+    {
+        if (direction == 1) { rightImpactLaunchParticles.Play(); }
+        else { leftImpactLaunchParticles.Play(); }
     }
 }
