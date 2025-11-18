@@ -219,6 +219,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.linearVelocityX = maxSpeedImpact * facingRight;
             currentState = PlayerState.Impact;
+            ImpactState?.Invoke();
         }
         else if (collision.CompareTag("Target"))
         {

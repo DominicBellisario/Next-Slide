@@ -214,6 +214,8 @@ MonoBehaviour:
   rightNormalLaunchParticles: {fileID: 1734462080083199075}
   leftImpactLaunchParticles: {fileID: 1432968428064605168}
   rightImpactLaunchParticles: {fileID: 6898141074177002669}
+  afterimagePrefab: {fileID: 778465778966169856, guid: fb2df73ca0892714b84d533b8a147e7b, type: 3}
+  spawnInterval: 0.1
 --- !u!114 &8423464674324107197
 MonoBehaviour:
   m_ObjectHideFlags: 0

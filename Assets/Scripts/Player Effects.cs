@@ -16,8 +16,14 @@ public class PlayerEffects : MonoBehaviour
     [SerializeField] ParticleSystem rightNormalLaunchParticles;
     [SerializeField] ParticleSystem leftImpactLaunchParticles;
     [SerializeField] ParticleSystem rightImpactLaunchParticles;
+
+    [SerializeField] GameObject afterimagePrefab;
+    [SerializeField] float spawnInterval = 0.05f;
+
     Rigidbody2D rb;
     Color startColor;
+    bool playAfterimage = false;
+    float afterimageTimer = 0;
 
     void OnEnable()
     {
@@ -47,10 +53,13 @@ public class PlayerEffects : MonoBehaviour
     private void ImpactStateEffects()
     {
         spriteRenderer.color = impactColor;
+        afterimageTimer = 0f;
+        playAfterimage = true;
     }
     private void NormalStateEffects()
     {
         spriteRenderer.color = startColor;
+        playAfterimage = false;
     }
 
     private void PlayTargetEffect() { StartCoroutine(TargetEffect()); }
@@ -83,5 +92,29 @@ public class PlayerEffects : MonoBehaviour
     {
         if (direction == 1) { rightImpactLaunchParticles.Play(); }
         else { leftImpactLaunchParticles.Play(); }
+    }
+
+    private void Update()
+    {
+        if (playAfterimage)
+        {
+            afterimageTimer -= Time.deltaTime;
+
+            if (afterimageTimer <= 0f)
+            {
+                GameObject a = Instantiate(afterimagePrefab, transform.position, Quaternion.identity);
+
+                // Copy current sprite
+                var sr = a.GetComponent<SpriteRenderer>();
+
+                sr.sprite = spriteRenderer.sprite;
+                sr.flipX = spriteRenderer.flipX;
+                sr.flipY = spriteRenderer.flipY;
+                sr.color = spriteRenderer.color;
+                a.transform.localScale = transform.localScale;
+
+                afterimageTimer = spawnInterval;
+            }
+        }
     }
 }
