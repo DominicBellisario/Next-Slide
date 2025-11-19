@@ -31,7 +31,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8547109951876924312}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3549227942898787124
@@ -79,7 +80,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.9652157, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.7058824, g: 0.6431373, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
@@ -147,3 +148,109 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f773749c85ce354290388f250d4d4a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pulseColor: {r: 0.99442106, g: 1, b: 0.504717, a: 1}
+  pulseTime: 0.7
+  pulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0022277832
+      value: 0.80078125
+      inSlope: 1.3842454
+      outSlope: 1.3842454
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.1480693
+      value: 1.0026617
+      inSlope: 0.0085857725
+      outSlope: 0.0085857725
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.06916746
+    - serializedVersion: 3
+      time: 0.24820817
+      value: 1.0010529
+      inSlope: 0.0013706685
+      outSlope: 0.0013706685
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.99890137
+      value: 0.00078582764
+      inSlope: -1.3324578
+      outSlope: -1.3324578
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!1001 &5542586706445766607
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6286995840289194978}
+    m_Modifications:
+    - target: {fileID: 4212649098766191703, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212649098766191703, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7109402278937647479, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+      propertyPath: m_Name
+      value: Hit Speed Panel
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+--- !u!4 &8547109951876924312 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4212649098766191703, guid: 20a89494dbb7efb4ea51e5583cd19e71, type: 3}
+  m_PrefabInstance: {fileID: 5542586706445766607}
+  m_PrefabAsset: {fileID: 0}

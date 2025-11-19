@@ -29,6 +29,7 @@ public class PlayerEffects : MonoBehaviour
     {
         PlayerMovement.NormalState += NormalStateEffects;
         PlayerMovement.ImpactState += ImpactStateEffects;
+        PlayerMovement.StunState += NormalStateEffects;
         PlayerMovement.HitTarget += PlayTargetEffect;
         PlayerMovement.LaunchedUp += PlayLaunchParticles;
         PlayerMovement.BounceBackNormal += PlayNormalBounceParticles;
@@ -38,6 +39,7 @@ public class PlayerEffects : MonoBehaviour
     {
         PlayerMovement.NormalState -= NormalStateEffects;
         PlayerMovement.ImpactState -= ImpactStateEffects;
+        PlayerMovement.StunState -= NormalStateEffects;
         PlayerMovement.HitTarget -= PlayTargetEffect;
         PlayerMovement.LaunchedUp -= PlayLaunchParticles;
         PlayerMovement.BounceBackNormal -= PlayNormalBounceParticles;
@@ -102,16 +104,16 @@ public class PlayerEffects : MonoBehaviour
 
             if (afterimageTimer <= 0f)
             {
-                GameObject a = Instantiate(afterimagePrefab, transform.position, Quaternion.identity);
+                GameObject afterimage = Instantiate(afterimagePrefab, transform.position, Quaternion.identity);
 
                 // Copy current sprite
-                var sr = a.GetComponent<SpriteRenderer>();
+                SpriteRenderer afterimageSR = afterimage.GetComponent<SpriteRenderer>();
 
-                sr.sprite = spriteRenderer.sprite;
-                sr.flipX = spriteRenderer.flipX;
-                sr.flipY = spriteRenderer.flipY;
-                sr.color = spriteRenderer.color;
-                a.transform.localScale = transform.localScale;
+                afterimageSR.sprite = spriteRenderer.sprite;
+                afterimageSR.flipX = spriteRenderer.flipX;
+                afterimageSR.flipY = spriteRenderer.flipY;
+                afterimageSR.color = spriteRenderer.color;
+                afterimage.transform.localScale = spriteRenderer.transform.localScale;
 
                 afterimageTimer = spawnInterval;
             }

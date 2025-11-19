@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public static event Action ImpactState;
     public static event Action NormalState;
+    public static event Action StunState;
     public static event Action<int> BounceBackNormal;
     public static event Action<int> BounceBackImpact;
     public static event Action FlipH;
@@ -50,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
     float pendingVerticalOffset;
     float currentStunTime;
     float stunTimer;
-    PlayerState nextState;
+    Action nextState;
 
     void OnEnable()
     {
@@ -88,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
             case PlayerState.Stunned:
                 stunTimer += Time.deltaTime;
                 if (stunTimer >= currentStunTime)
-                    currentState = nextState;
+                    nextState();
                 break;
         }
     }
@@ -118,7 +119,7 @@ public class PlayerMovement : MonoBehaviour
                 rb.position += new Vector2(0.1f * -facingRight, 0f);
                 rb.AddForce(bounceBackForceNormal * new Vector2(-facingRight, normalGravity));
                 BounceBackNormal?.Invoke(facingRight);
-                StunPlayer(stunTimeNormal, PlayerState.Normal);
+                StunPlayer(stunTimeNormal, SwitchToNormal);
                 break;
 
             case PlayerState.BounceBackImpact:
@@ -126,7 +127,7 @@ public class PlayerMovement : MonoBehaviour
                 rb.position += new Vector2(0.1f * -facingRight, 0f);
                 rb.AddForce(bounceBackForceImpact * new Vector2(-facingRight, normalGravity));
                 BounceBackImpact?.Invoke(facingRight);
-                StunPlayer(stunTimeImpact, PlayerState.Normal);
+                StunPlayer(stunTimeImpact, SwitchToNormal);
                 break;
 
             case PlayerState.Stunned:
@@ -136,7 +137,7 @@ public class PlayerMovement : MonoBehaviour
                 vx -= Mathf.Sign(vx) * decel;
 
                 rb.linearVelocity = new Vector2(
-                    Mathf.Clamp(vx, -maxSpeedNormal, maxSpeedNormal),
+                    Mathf.Clamp(vx, -maxSpeedImpact, maxSpeedImpact),
                     rb.linearVelocityY
                 );
                 break;
@@ -177,6 +178,7 @@ public class PlayerMovement : MonoBehaviour
                 // destroy the object
                 case PlayerState.Impact:
                     collision.collider.GetComponent<ObjectImpact>().DestroyObject();
+                    rb.linearVelocityX = (maxSpeedImpact - 2f) * facingRight;
                     break;
                 default:
                     collision.collider.GetComponent<ObjectImpact>().HitObject();
@@ -218,8 +220,8 @@ public class PlayerMovement : MonoBehaviour
         else if (collision.CompareTag("SpeedPanel"))
         {
             rb.linearVelocityX = maxSpeedImpact * facingRight;
-            currentState = PlayerState.Impact;
-            ImpactState?.Invoke();
+            collision.gameObject.GetComponent<SpeedPanel>().PlayEffects();
+            SwitchToImpact();
         }
         else if (collision.CompareTag("Target"))
         {
@@ -229,6 +231,17 @@ public class PlayerMovement : MonoBehaviour
             rightCollider.enabled = false;
             HitTarget?.Invoke();
         }
+    }
+
+    private void SwitchToNormal()
+    {
+        NormalState?.Invoke();
+        currentState = PlayerState.Normal;
+    }
+    private void SwitchToImpact()
+    {
+        ImpactState?.Invoke();
+        currentState = PlayerState.Impact;
     }
 
     private Vector2 NormalAlignedForce(Vector2 startForce)
@@ -320,11 +333,12 @@ public class PlayerMovement : MonoBehaviour
         FlipH?.Invoke();
     }
 
-    public void StunPlayer(float stunTime, PlayerState _nextState)
+    public void StunPlayer(float stunTime, Action _nextState)
     {
         stunTimer = 0;
         currentStunTime = stunTime;
         nextState = _nextState;
+        StunState?.Invoke();
         currentState = PlayerState.Stunned;
     }
 

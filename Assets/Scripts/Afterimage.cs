@@ -1,25 +1,31 @@
+using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class Afterimage : MonoBehaviour
 {
     SpriteRenderer sr;
     Color color;
-    [SerializeField] float lifetime = 0.3f;
-    [SerializeField] float fadeSpeed = 5f;
+    [SerializeField] float fadeTime;
 
     void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         color = sr.color;
+        StartCoroutine(FadeOut());
     }
 
-    void Update()
+    private IEnumerator FadeOut()
     {
-        //fade out and destroy
-        color.a -= fadeSpeed * Time.deltaTime;
-        sr.color = color;
-
-        if (color.a <= 0f) { Destroy(gameObject); }
+        float t = 0;
+        while (t < 1)
+        {
+            color.a = Mathf.Lerp(1f, 0f, t);
+            sr.color = color;
+            t += Time.deltaTime / fadeTime;
+            yield return null;
+        }
+        Destroy(gameObject);
     }
 }
 
