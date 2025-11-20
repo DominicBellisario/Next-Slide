@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public enum PlayerState
@@ -20,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public static event Action StunState;
     public static event Action<int> BounceBackNormal;
     public static event Action<int> BounceBackImpact;
+    public static event Action<int> BreakImpactObject;
     public static event Action FlipH;
     public static event Action HitTarget;
     public static event Action LaunchedUp;
@@ -179,6 +181,7 @@ public class PlayerMovement : MonoBehaviour
                 case PlayerState.Impact:
                     collision.collider.GetComponent<ObjectImpact>().DestroyObject();
                     rb.linearVelocityX = (maxSpeedImpact - 2f) * facingRight;
+                    BreakImpactObject?.Invoke(0);
                     break;
                 default:
                     collision.collider.GetComponent<ObjectImpact>().HitObject();

@@ -11,10 +11,12 @@ public class CameraShake : MonoBehaviour
     void OnEnable()
     {
         PlayerMovement.BounceBackImpact += ImpactBounceShake;
+        PlayerMovement.BreakImpactObject += ImpactBounceShake;
     }
     void OnDisable()
     {
         PlayerMovement.BounceBackImpact -= ImpactBounceShake;
+        PlayerMovement.BreakImpactObject -= ImpactBounceShake;
     }
 
     private void ImpactBounceShake(int nan)
