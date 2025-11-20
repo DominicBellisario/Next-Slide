@@ -7,7 +7,7 @@ public class PlayerEffects : MonoBehaviour
 {
     public static event Action FinishedTargetEffect;
 
-    [SerializeField] SpriteRenderer spriteRenderer;
+    [SerializeField] SpriteRenderer sprite;
     [SerializeField] float targetSlowDownTime;
     [SerializeField] float targetWaitTime;
     [SerializeField] Color impactColor;
@@ -34,6 +34,7 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.LaunchedUp += PlayLaunchParticles;
         PlayerMovement.BounceBackNormal += PlayNormalBounceParticles;
         PlayerMovement.BounceBackImpact += PlayImpactBounceParticles;
+        PlayerMovement.FlipH += PlayFlipEffects;
     }
     void OnDisable()
     {
@@ -44,23 +45,24 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.LaunchedUp -= PlayLaunchParticles;
         PlayerMovement.BounceBackNormal -= PlayNormalBounceParticles;
         PlayerMovement.BounceBackImpact -= PlayImpactBounceParticles;
+        PlayerMovement.FlipH -= PlayFlipEffects;
     }
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        startColor = spriteRenderer.color;
+        startColor = sprite.color;
     }
 
     private void ImpactStateEffects()
     {
-        spriteRenderer.color = impactColor;
+        sprite.color = impactColor;
         afterimageTimer = 0f;
         playAfterimage = true;
     }
     private void NormalStateEffects()
     {
-        spriteRenderer.color = startColor;
+        sprite.color = startColor;
         playAfterimage = false;
     }
 
@@ -109,14 +111,40 @@ public class PlayerEffects : MonoBehaviour
                 // Copy current sprite
                 SpriteRenderer afterimageSR = afterimage.GetComponent<SpriteRenderer>();
 
-                afterimageSR.sprite = spriteRenderer.sprite;
-                afterimageSR.flipX = spriteRenderer.flipX;
-                afterimageSR.flipY = spriteRenderer.flipY;
-                afterimageSR.color = spriteRenderer.color;
-                afterimage.transform.localScale = spriteRenderer.transform.localScale;
+                afterimageSR.sprite = sprite.sprite;
+                afterimageSR.flipX = sprite.flipX;
+                afterimageSR.flipY = sprite.flipY;
+                afterimageSR.color = sprite.color;
+                afterimage.transform.localScale = sprite.transform.localScale;
 
                 afterimageTimer = spawnInterval;
             }
         }
+    }
+
+    private void PlayFlipEffects(float flipTime, AnimationCurve flipCurve)
+    {
+        StartCoroutine(PlayFlipEffectsCoroutine(flipTime, flipCurve));
+    }
+
+    private IEnumerator PlayFlipEffectsCoroutine(float flipTime, AnimationCurve flipCurve)
+    {
+        Vector2 startSize = sprite.size;
+        Vector2 endSize = new(0f, sprite.size.y);
+        float t = 0f;
+        while (t < 0.5f)
+        {
+            sprite.size = Vector2.Lerp(startSize, endSize, flipCurve.Evaluate(t));
+            t += Time.deltaTime / flipTime;
+            yield return null;
+        }
+        sprite.flipX = !sprite.flipX;
+        while (t < 1f)
+        {
+            sprite.size = Vector2.Lerp(startSize, endSize, flipCurve.Evaluate(t));
+            t += Time.deltaTime / flipTime;
+            yield return null;
+        }
+        sprite.size = startSize;
     }
 }

@@ -205,7 +205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f44761f515fad4dbe45709bf512bf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 5450278753829089141}
+  sprite: {fileID: 5450278753829089141}
   targetSlowDownTime: 0.5
   targetWaitTime: 0.5
   impactColor: {r: 0.7075472, g: 0.6420336, b: 0, a: 1}
@@ -377,7 +377,7 @@ SpriteRenderer:
   m_Color: {r: 0.745283, g: 0, b: 0.71718395, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
+  m_DrawMode: 1
   m_Size: {x: 1, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0

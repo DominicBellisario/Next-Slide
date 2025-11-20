@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 7436995031572524594}
   - component: {fileID: 7536485353874405010}
   - component: {fileID: 2268730879171122005}
+  - component: {fileID: 5797931740214346161}
   m_Layer: 7
   m_Name: FlipHLeft
   m_TagString: FlipHLeft
@@ -212,3 +213,49 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.3
+--- !u!114 &5797931740214346161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3218152297225797257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeae86ebe657ea44b982f861a653e46a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flipDuration: 0.7
+  flipCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.9619989
+      outSlope: 1.9619989
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.4999767
+      value: 0.98095375
+      inSlope: 1.9177817
+      outSlope: -1.8020476
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.106776565
+      outWeight: 0.098215766
+    - serializedVersion: 3
+      time: 0.9977273
+      value: 0.004761905
+      inSlope: -1.9612068
+      outSlope: -1.9612068
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

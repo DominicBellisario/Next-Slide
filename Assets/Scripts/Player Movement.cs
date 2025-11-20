@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public enum PlayerState
@@ -22,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public static event Action<int> BounceBackNormal;
     public static event Action<int> BounceBackImpact;
     public static event Action<int> BreakImpactObject;
-    public static event Action FlipH;
+    public static event Action<float, AnimationCurve> FlipH;
     public static event Action HitTarget;
     public static event Action LaunchedUp;
 
@@ -214,11 +213,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.CompareTag("FlipHLeft"))
         {
-            StartCoroutine(PerformFlipH(-1));
+            StartCoroutine(PerformFlipH(-1, collision.gameObject.GetComponent<Flip>().FlipDuration, collision.gameObject.GetComponent<Flip>().FlipCurve));
         }
         else if (collision.CompareTag("FlipHRight"))
         {
-            StartCoroutine(PerformFlipH(1));
+            StartCoroutine(PerformFlipH(1, collision.gameObject.GetComponent<Flip>().FlipDuration, collision.gameObject.GetComponent<Flip>().FlipCurve));
         }
         else if (collision.CompareTag("SpeedPanel"))
         {
@@ -322,18 +321,18 @@ public class PlayerMovement : MonoBehaviour
         return Physics2D.CircleCast(transform.position, 0.2f, Vector2.down, centerCollider.bounds.extents.y + offset - 0.2f, layerMask);
     }
 
-    private IEnumerator PerformFlipH(int direction)
+    private IEnumerator PerformFlipH(int direction, float flipTime, AnimationCurve flipCurve)
     {
+        FlipH?.Invoke(flipTime, flipCurve);
         Vector2 startVelocity = rb.linearVelocity;
         rb.linearVelocity = Vector2.zero;
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(flipTime);
 
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         facingRight = direction;
         rb.linearVelocity = startVelocity * Vector2.left;
-        FlipH?.Invoke();
     }
 
     public void StunPlayer(float stunTime, Action _nextState)
