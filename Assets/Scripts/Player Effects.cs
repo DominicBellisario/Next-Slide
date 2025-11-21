@@ -34,7 +34,6 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.LaunchedUp += PlayLaunchParticles;
         PlayerMovement.BounceBackNormal += PlayNormalBounceParticles;
         PlayerMovement.BounceBackImpact += PlayImpactBounceParticles;
-        PlayerMovement.FlipH += PlayFlipEffects;
     }
     void OnDisable()
     {
@@ -45,7 +44,6 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.LaunchedUp -= PlayLaunchParticles;
         PlayerMovement.BounceBackNormal -= PlayNormalBounceParticles;
         PlayerMovement.BounceBackImpact -= PlayImpactBounceParticles;
-        PlayerMovement.FlipH -= PlayFlipEffects;
     }
 
     void Start()
@@ -120,31 +118,5 @@ public class PlayerEffects : MonoBehaviour
                 afterimageTimer = spawnInterval;
             }
         }
-    }
-
-    private void PlayFlipEffects(float flipTime, AnimationCurve flipCurve)
-    {
-        StartCoroutine(PlayFlipEffectsCoroutine(flipTime, flipCurve));
-    }
-
-    private IEnumerator PlayFlipEffectsCoroutine(float flipTime, AnimationCurve flipCurve)
-    {
-        Vector2 startSize = sprite.size;
-        Vector2 endSize = new(0f, sprite.size.y);
-        float t = 0f;
-        while (t < 0.5f)
-        {
-            sprite.size = Vector2.Lerp(startSize, endSize, flipCurve.Evaluate(t));
-            t += Time.deltaTime / flipTime;
-            yield return null;
-        }
-        sprite.flipX = !sprite.flipX;
-        while (t < 1f)
-        {
-            sprite.size = Vector2.Lerp(startSize, endSize, flipCurve.Evaluate(t));
-            t += Time.deltaTime / flipTime;
-            yield return null;
-        }
-        sprite.size = startSize;
     }
 }

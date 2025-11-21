@@ -213,11 +213,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.CompareTag("FlipHLeft"))
         {
-            StartCoroutine(PerformFlipH(-1, collision.gameObject.GetComponent<Flip>().FlipDuration, collision.gameObject.GetComponent<Flip>().FlipCurve));
+            StartCoroutine(PerformFlipH(-1, collision.gameObject.GetComponent<FlipObject>().FlipDuration, collision.gameObject.GetComponent<FlipObject>().FlipCurve));
         }
         else if (collision.CompareTag("FlipHRight"))
         {
-            StartCoroutine(PerformFlipH(1, collision.gameObject.GetComponent<Flip>().FlipDuration, collision.gameObject.GetComponent<Flip>().FlipCurve));
+            StartCoroutine(PerformFlipH(1, collision.gameObject.GetComponent<FlipObject>().FlipDuration, collision.gameObject.GetComponent<FlipObject>().FlipCurve));
         }
         else if (collision.CompareTag("SpeedPanel"))
         {

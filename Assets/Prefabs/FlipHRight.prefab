@@ -225,36 +225,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeae86ebe657ea44b982f861a653e46a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flipDuration: 0.7
+  flipDuration: 1
   flipCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 1.9619989
-      outSlope: 1.9619989
-      tangentMode: 34
+      inSlope: -0
+      outSlope: -0
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.33333334
+      outWeight: 0.25795946
     - serializedVersion: 3
-      time: 0.4999767
-      value: 0.98095375
-      inSlope: 1.9177817
-      outSlope: -1.8020476
+      time: 0.29887295
+      value: 0.000029116869
+      inSlope: 0.037370224
+      outSlope: 2.5093894
       tangentMode: 1
       weightedMode: 0
-      inWeight: 0.106776565
-      outWeight: 0.098215766
+      inWeight: 0.20257962
+      outWeight: 0.098244086
+    - serializedVersion: 3
+      time: 0.65079457
+      value: 0.96226937
+      inSlope: 2.9235482
+      outSlope: -2.7108262
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.10020592
+      outWeight: 0.124172136
     - serializedVersion: 3
       time: 0.9977273
       value: 0.004761905
-      inSlope: -1.9612068
-      outSlope: -1.9612068
-      tangentMode: 34
+      inSlope: -2.4437664
+      outSlope: -2.4437664
+      tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0.104576446
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

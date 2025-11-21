@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Flip : MonoBehaviour
+public class FlipObject : MonoBehaviour
 {
     [SerializeField] float flipDuration;
     public float FlipDuration { get { return flipDuration; } }
