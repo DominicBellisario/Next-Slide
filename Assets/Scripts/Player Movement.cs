@@ -52,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
     float pendingVerticalOffset;
     float currentStunTime;
     float stunTimer;
+    bool disableTriggers;
     Action nextState;
 
     void OnEnable()
@@ -211,6 +212,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (disableTriggers) return;
         if (collision.CompareTag("FlipHLeft"))
         {
             StartCoroutine(PerformFlipH(-1, collision.gameObject.GetComponent<FlipObject>().FlipDuration, collision.gameObject.GetComponent<FlipObject>().FlipCurve));
@@ -228,9 +230,7 @@ public class PlayerMovement : MonoBehaviour
         else if (collision.CompareTag("Target"))
         {
             currentState = PlayerState.Target;
-            leftCollider.enabled = false;
-            centerCollider.enabled = false;
-            rightCollider.enabled = false;
+            disableTriggers = true;
             HitTarget?.Invoke();
         }
     }
@@ -324,12 +324,14 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator PerformFlipH(int direction, float flipTime, AnimationCurve flipCurve)
     {
         FlipH?.Invoke(flipTime, flipCurve);
+        disableTriggers = true;
         Vector2 startVelocity = rb.linearVelocity;
         rb.linearVelocity = Vector2.zero;
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
 
         yield return new WaitForSeconds(flipTime);
 
+        disableTriggers = false;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         facingRight = direction;
         rb.linearVelocity = startVelocity * Vector2.left;
