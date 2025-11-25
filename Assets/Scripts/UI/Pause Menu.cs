@@ -7,6 +7,7 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     public static event Action FinishedPauseAnimation;
+    public static event Action Unpaused;
 
     [SerializeField] float transitionTime;
     [SerializeField] AnimationCurve transitionCurve;
@@ -17,16 +18,16 @@ public class PauseMenu : MonoBehaviour
     LevelVariables lVar;
     float startYPos;
     float endYPos;
+    bool isPaused;
+    bool canPause = true;
 
     void OnEnable()
     {
-        PlayerInputs.Paused += ActivatePauseMenu;
-        PlayerInputs.Unpaused += DeactivatePauseMenu;
+        PlayerInputs.PauseButtonPressed += RunPauseLogic;
     }
     void OnDisable()
     {
-        PlayerInputs.Paused -= ActivatePauseMenu;
-        PlayerInputs.Unpaused -= DeactivatePauseMenu;
+        PlayerInputs.PauseButtonPressed -= RunPauseLogic;
     }
 
     void Start()
@@ -39,13 +40,20 @@ public class PauseMenu : MonoBehaviour
         levelNumbers.text = "L" + lVar.LevelNumber + " S" + lVar.SlideNumber;
     }
 
-    private void ActivatePauseMenu()
+    private void RunPauseLogic()
+    {
+        if (!canPause) return;
+        if (!isPaused) { ActivatePauseMenu(); }
+        else { DeactivatePauseMenu(); }
+    }
+    public void ActivatePauseMenu()
     {
         StartCoroutine(ActivatePauseMenuCoroutine());
     }
 
     private IEnumerator ActivatePauseMenuCoroutine()
     {
+        canPause = false;
         float t = 0;
         while (t < 1)
         {
@@ -57,16 +65,22 @@ public class PauseMenu : MonoBehaviour
         }
         cGroup.interactable = true;
         cGroup.blocksRaycasts = true;
+
+        isPaused = true;
+        canPause = true;
+
         FinishedPauseAnimation?.Invoke();
     }
 
-    private void DeactivatePauseMenu()
+    public void DeactivatePauseMenu()
     {
         StartCoroutine(DeactivatePauseMenuCoroutine());
     }
 
     private IEnumerator DeactivatePauseMenuCoroutine()
     {
+        Unpaused?.Invoke();
+        canPause = false;
         cGroup.interactable = false;
         cGroup.blocksRaycasts = false;
         float t = 0;
@@ -78,6 +92,8 @@ public class PauseMenu : MonoBehaviour
             t += Time.deltaTime / transitionTime;
             yield return null;
         }
+        isPaused = false;
+        canPause = true;
         FinishedPauseAnimation?.Invoke();
     }
 }

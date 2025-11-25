@@ -9,11 +9,11 @@ public class Dropdown : MonoBehaviour
 
     void OnEnable()
     {
-        PlayerInputs.Unpaused += DeactivateDropdown;
+        PauseMenu.Unpaused += DeactivateDropdown;
     }
     void OnDisable()
     {
-        PlayerInputs.Unpaused -= DeactivateDropdown;
+        PauseMenu.Unpaused -= DeactivateDropdown;
     }
 
     void Start()
