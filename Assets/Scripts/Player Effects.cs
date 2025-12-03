@@ -11,12 +11,14 @@ public class PlayerEffects : MonoBehaviour
     [SerializeField] float targetSlowDownTime;
     [SerializeField] float targetWaitTime;
     [SerializeField] Color impactColor;
+    [Header("Particles")]
     [SerializeField] ParticleSystem launchParticles;
     [SerializeField] ParticleSystem leftNormalLaunchParticles;
     [SerializeField] ParticleSystem rightNormalLaunchParticles;
     [SerializeField] ParticleSystem leftImpactLaunchParticles;
     [SerializeField] ParticleSystem rightImpactLaunchParticles;
-
+    [SerializeField] ParticleSystem hardFallParticles;
+    [Header("After Image")]
     [SerializeField] GameObject afterimagePrefab;
     [SerializeField] float spawnInterval = 0.05f;
 
@@ -34,6 +36,7 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.LaunchedUp += PlayLaunchParticles;
         PlayerMovement.BounceBackNormal += PlayNormalBounceParticles;
         PlayerMovement.BounceBackImpact += PlayImpactBounceParticles;
+        PlayerMovement.HardFall += PlayHardFallParticles;
     }
     void OnDisable()
     {
@@ -44,6 +47,7 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.LaunchedUp -= PlayLaunchParticles;
         PlayerMovement.BounceBackNormal -= PlayNormalBounceParticles;
         PlayerMovement.BounceBackImpact -= PlayImpactBounceParticles;
+        PlayerMovement.HardFall -= PlayHardFallParticles;
     }
 
     void Start()
@@ -94,6 +98,11 @@ public class PlayerEffects : MonoBehaviour
     {
         if (direction == 1) { rightImpactLaunchParticles.Play(); }
         else { leftImpactLaunchParticles.Play(); }
+    }
+
+    private void PlayHardFallParticles()
+    {
+        hardFallParticles.Play();
     }
 
     private void Update()

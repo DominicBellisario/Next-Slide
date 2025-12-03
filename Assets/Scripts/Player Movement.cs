@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     public static event Action<int> BreakImpactObject;
     public static event Action<float, AnimationCurve> FlipH;
     public static event Action HitTarget;
+    public static event Action HardFall;
     public static event Action LaunchedUp;
 
     [Header("Colliders")]
@@ -37,12 +38,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float accelImpact;
     [SerializeField] float maxSpeedImpact;
     [SerializeField] Vector2 bounceBackForceImpact;
+    [Header("Hard Fall")]
+    [SerializeField] float hardFallMinSpeed;
+    [SerializeField] Vector2 hardFallBounceAmount;
     [Header("Stun")]
     [SerializeField] float stunDecceleration;
     [SerializeField] float stunTimeNormal;
     [SerializeField] float stunTimeImpact;
     [Header("Misc")]
     [SerializeField] float objectLaunchUpForce;
+    
 
     Rigidbody2D rb;
     int facingRight;
@@ -54,6 +59,7 @@ public class PlayerMovement : MonoBehaviour
     float stunTimer;
     bool disableTriggers;
     Action nextState;
+    Vector2 lastFrameVelocity;
 
     void OnEnable()
     {
@@ -156,13 +162,25 @@ public class PlayerMovement : MonoBehaviour
 
             pendingVerticalOffset = 0f;
         }
+
+        //record the velocity
+        lastFrameVelocity = rb.linearVelocity;
     }
 
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         // if the side of the player is not hitting the object, return
-        if (collision.collider == DownCircleCast(0.4f, centerCollider.includeLayers).collider) return;
+        if (collision.collider == DownCircleCast(0.4f, centerCollider.includeLayers).collider)
+        {
+            if (lastFrameVelocity.y < hardFallMinSpeed)
+            {
+                // player hard falls if they fall with enough speed
+                HardFall?.Invoke(); 
+                rb.AddForce(hardFallBounceAmount);
+            }
+            return;
+        }
         if (collision.otherCollider.name == "Center") return;
         if (collision.otherCollider.name == "Left" && facingRight == 1) return;
         if (collision.otherCollider.name == "Right" && facingRight == -1) return;
@@ -213,11 +231,11 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (disableTriggers) return;
-        if (collision.CompareTag("FlipHLeft"))
+        if (collision.CompareTag("FlipHLeft") && facingRight == 1)
         {
             StartCoroutine(PerformFlipH(-1, collision.gameObject.GetComponent<FlipObject>().FlipDuration, collision.gameObject.GetComponent<FlipObject>().FlipCurve));
         }
-        else if (collision.CompareTag("FlipHRight"))
+        else if (collision.CompareTag("FlipHRight") && facingRight == -1)
         {
             StartCoroutine(PerformFlipH(1, collision.gameObject.GetComponent<FlipObject>().FlipDuration, collision.gameObject.GetComponent<FlipObject>().FlipCurve));
         }
@@ -230,7 +248,9 @@ public class PlayerMovement : MonoBehaviour
         else if (collision.CompareTag("Target"))
         {
             currentState = PlayerState.Target;
-            disableTriggers = true;
+            centerCollider.enabled = false;
+            rightCollider.enabled = false;
+            leftCollider.enabled = false;
             HitTarget?.Invoke();
         }
     }
@@ -248,14 +268,14 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 NormalAlignedForce(Vector2 startForce)
     {
-        RaycastHit2D hit = DownCircleCast(0.2f, centerCollider.includeLayers);
+        RaycastHit2D hit = DownCircleCast(0.3f, centerCollider.includeLayers);
         if (hit.collider)
         {
             // Project the force perpendicular to the normal
             Vector2 tangent = new(hit.normal.y, -hit.normal.x);
 
             // Return movement along the slope
-            Vector2 adjustedForce = Mathf.Sign(startForce.x) * startForce.magnitude * tangent.normalized;
+            Vector2 adjustedForce = Mathf.Sign(startForce.x) * startForce.magnitude * tangent.normalized * 1.5f;
             return adjustedForce;
         }
         return startForce;

@@ -179,6 +179,7 @@ MonoBehaviour:
   bounceSource: {fileID: 6433556433891297105}
   bounceBackNormal: {fileID: 8300000, guid: 0e0574bff22906d489b2d113691d9a2f, type: 3}
   bounceBackImpact: {fileID: 8300000, guid: 178ddb4553521d94aa61d57f407fe3cd, type: 3}
+  groundImpact: {fileID: 8300000, guid: 197d849ae682abc498f75296c7c7cfc9, type: 3}
   speedPanel: {fileID: 395718669819041003}
   hitSpeedPanel: {fileID: 8300000, guid: e51669da7b90d464abe72dc34a5bfdbe, type: 3}
   levelTransition: {fileID: 3911381069653252544}

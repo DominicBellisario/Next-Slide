@@ -6,6 +6,7 @@ public class Audio : MonoBehaviour
     [SerializeField] AudioSource bounceSource;
     [SerializeField] AudioClip bounceBackNormal;
     [SerializeField] AudioClip bounceBackImpact;
+    [SerializeField] AudioClip groundImpact;
     [Header ("Speed Panel")]
     [SerializeField] AudioSource speedPanel;
     [SerializeField] AudioClip hitSpeedPanel;
@@ -19,6 +20,7 @@ public class Audio : MonoBehaviour
         PlayerMovement.BounceBackImpact += PlayBounceBackImpact;
         PlayerMovement.ImpactState += PlaySpeedPanel;
         PlayerMovement.HitTarget += PlayTarget;
+        PlayerMovement.HardFall += PlayGround;
     }
     void OnDisable()
     {
@@ -26,6 +28,7 @@ public class Audio : MonoBehaviour
         PlayerMovement.BounceBackImpact -= PlayBounceBackImpact;
         PlayerMovement.ImpactState -= PlaySpeedPanel;
         PlayerMovement.HitTarget -= PlayTarget;
+        PlayerMovement.HardFall -= PlayGround;
     }
 
     void PlayBounceBackNormal(int nan) { bounceSource.PlayOneShot(bounceBackNormal); }
@@ -35,4 +38,6 @@ public class Audio : MonoBehaviour
     void PlaySpeedPanel() { speedPanel.PlayOneShot(hitSpeedPanel); }
 
     void PlayTarget() { levelTransition.PlayOneShot(hitTarget); }
+
+    void PlayGround() { bounceSource.PlayOneShot(groundImpact); }
 }
