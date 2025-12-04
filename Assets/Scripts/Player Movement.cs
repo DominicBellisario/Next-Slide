@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     public static event Action HitGroundSoft;
     public static event Action HitGroundHard;
     public static event Action LaunchedUp;
+    public static event Action SquishV;
 
     [Header("Colliders")]
     [SerializeField] Collider2D leftCollider;
@@ -48,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float stunTimeImpact;
     [Header("Misc")]
     [SerializeField] float objectLaunchUpForce;
-    
+
 
     Rigidbody2D rb;
     int facingRight;
@@ -171,13 +172,13 @@ public class PlayerMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // if the side of the player is not hitting the object, return
-        if (collision.collider == DownCircleCast(0.4f, centerCollider.includeLayers).collider)
+        // the bottom of the player hit the object
+        if (collision.collider == CircleCast(0.2f, centerCollider.includeLayers).collider)
         {
             if (lastFrameVelocity.y < hardFallMinSpeed)
             {
                 // player hard falls if they fall with enough speed
-                HitGroundHard?.Invoke(); 
+                HitGroundHard?.Invoke();
                 rb.AddForce(hardFallBounceAmount);
             }
             else
@@ -186,6 +187,7 @@ public class PlayerMovement : MonoBehaviour
             }
             return;
         }
+        // do not bounce if the side collision meets these
         if (collision.otherCollider.name == "Center") return;
         if (collision.otherCollider.name == "Left" && facingRight == 1) return;
         if (collision.otherCollider.name == "Right" && facingRight == -1) return;
@@ -260,6 +262,15 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (disableTriggers) return;
+        if (CircleCast(0.2f, centerCollider.includeLayers).collider != null && CircleCast(-0.2f, centerCollider.includeLayers).collider != null)
+        {
+            Debug.Log("squish");
+        }
+    }
+
     private void SwitchToNormal()
     {
         NormalState?.Invoke();
@@ -273,7 +284,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 NormalAlignedForce(Vector2 startForce)
     {
-        RaycastHit2D hit = DownCircleCast(0.3f, centerCollider.includeLayers);
+        RaycastHit2D hit = CircleCast(0.1f, centerCollider.includeLayers);
         if (hit.collider)
         {
             // Project the force perpendicular to the normal
@@ -288,7 +299,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckIfPlayerIsLaunched(GameObject gameObject)
     {
-        RaycastHit2D hit = DownCircleCast(0.05f, rightCollider.includeLayers);
+        RaycastHit2D hit = CircleCast(-0.15f, rightCollider.includeLayers);
         if (!canLaunch || hit.collider == null) return;
         if (hit.collider.gameObject == gameObject)
         {
@@ -304,7 +315,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckIfRotatingPlatformIsChanging(GameObject platformObj, float deltaAngle)
     {
-        RaycastHit2D hit = DownCircleCast(0.5f, centerCollider.includeLayers);
+        RaycastHit2D hit = CircleCast(0.3f, centerCollider.includeLayers);
         if (hit.collider && hit.collider.gameObject == platformObj)
         {
             // Convert to radians (for Mathf trig)
@@ -334,16 +345,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckIfPlatformBelowIsChanging(GameObject platformObj, float heightChange)
     {
-        RaycastHit2D hit = DownCircleCast(0.2f, centerCollider.includeLayers);
+        RaycastHit2D hit = CircleCast(0.0f, centerCollider.includeLayers);
         if (hit.collider && hit.collider.gameObject == platformObj)
         {
             pendingVerticalOffset += heightChange;
         }
     }
 
-    private RaycastHit2D DownCircleCast(float offset, LayerMask layerMask)
+    private RaycastHit2D CircleCast(float offset, LayerMask layerMask)
     {
-        return Physics2D.CircleCast(transform.position, 0.2f, Vector2.down, centerCollider.bounds.extents.y + offset - 0.2f, layerMask);
+        return Physics2D.CircleCast(transform.position, 0.2f, Vector2.down, centerCollider.bounds.extents.y + offset, layerMask);
     }
 
     private IEnumerator PerformFlipH(int direction, float flipTime, AnimationCurve flipCurve)

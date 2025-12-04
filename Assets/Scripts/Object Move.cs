@@ -105,7 +105,6 @@ public class ObjectMove : MonoBehaviour
                 hitTop = true;
                 ReachedMaxHeight?.Invoke(gameObject);
                 topParticles.Play();
-                Debug.Log("yo");
             }
             else if (!atTop)
             {
