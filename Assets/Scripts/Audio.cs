@@ -20,7 +20,7 @@ public class Audio : MonoBehaviour
         PlayerMovement.BounceBackImpact += PlayBounceBackImpact;
         PlayerMovement.ImpactState += PlaySpeedPanel;
         PlayerMovement.HitTarget += PlayTarget;
-        PlayerMovement.HardFall += PlayGround;
+        PlayerMovement.HitGroundHard += PlayGround;
     }
     void OnDisable()
     {
@@ -28,7 +28,7 @@ public class Audio : MonoBehaviour
         PlayerMovement.BounceBackImpact -= PlayBounceBackImpact;
         PlayerMovement.ImpactState -= PlaySpeedPanel;
         PlayerMovement.HitTarget -= PlayTarget;
-        PlayerMovement.HardFall -= PlayGround;
+        PlayerMovement.HitGroundHard -= PlayGround;
     }
 
     void PlayBounceBackNormal(int nan) { bounceSource.PlayOneShot(bounceBackNormal); }

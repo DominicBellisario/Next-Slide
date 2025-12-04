@@ -23,7 +23,8 @@ public class PlayerMovement : MonoBehaviour
     public static event Action<int> BreakImpactObject;
     public static event Action<float, AnimationCurve> FlipH;
     public static event Action HitTarget;
-    public static event Action HardFall;
+    public static event Action HitGroundSoft;
+    public static event Action HitGroundHard;
     public static event Action LaunchedUp;
 
     [Header("Colliders")]
@@ -176,8 +177,12 @@ public class PlayerMovement : MonoBehaviour
             if (lastFrameVelocity.y < hardFallMinSpeed)
             {
                 // player hard falls if they fall with enough speed
-                HardFall?.Invoke(); 
+                HitGroundHard?.Invoke(); 
                 rb.AddForce(hardFallBounceAmount);
+            }
+            else
+            {
+                HitGroundSoft?.Invoke();
             }
             return;
         }

@@ -36,7 +36,9 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.LaunchedUp += PlayLaunchParticles;
         PlayerMovement.BounceBackNormal += PlayNormalBounceParticles;
         PlayerMovement.BounceBackImpact += PlayImpactBounceParticles;
-        PlayerMovement.HardFall += PlayHardFallParticles;
+        PlayerMovement.HitGroundHard += PlayHardFallParticles;
+        PlayerMovement.HitGroundHard += StopLaunchParticles;
+        PlayerMovement.HitGroundSoft += StopLaunchParticles;
     }
     void OnDisable()
     {
@@ -47,7 +49,9 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.LaunchedUp -= PlayLaunchParticles;
         PlayerMovement.BounceBackNormal -= PlayNormalBounceParticles;
         PlayerMovement.BounceBackImpact -= PlayImpactBounceParticles;
-        PlayerMovement.HardFall -= PlayHardFallParticles;
+        PlayerMovement.HitGroundHard -= PlayHardFallParticles;
+        PlayerMovement.HitGroundHard -= StopLaunchParticles;
+        PlayerMovement.HitGroundSoft -= StopLaunchParticles;
     }
 
     void Start()
@@ -71,6 +75,7 @@ public class PlayerEffects : MonoBehaviour
     private void PlayTargetEffect() { StartCoroutine(TargetEffect()); }
     private IEnumerator TargetEffect()
     {
+        StopLaunchParticles();
         rb.gravityScale = 0f;
         float t = 0;
         Vector2 startVelocity = rb.linearVelocity;
@@ -88,14 +93,20 @@ public class PlayerEffects : MonoBehaviour
     {
         launchParticles.Play();
     }
+    private void StopLaunchParticles()
+    {
+        launchParticles.Stop();
+    }
 
     private void PlayNormalBounceParticles(int direction)
     {
+        StopLaunchParticles();
         if (direction == 1) { rightNormalLaunchParticles.Play(); }
         else { leftNormalLaunchParticles.Play(); }
     }
     private void PlayImpactBounceParticles(int direction)
     {
+        StopLaunchParticles();
         if (direction == 1) { rightImpactLaunchParticles.Play(); }
         else { leftImpactLaunchParticles.Play(); }
     }

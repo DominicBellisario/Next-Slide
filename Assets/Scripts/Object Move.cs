@@ -81,7 +81,7 @@ public class ObjectMove : MonoBehaviour
 
             smoothedDeltaX = Mathf.MoveTowards(smoothedDeltaX, targetDeltaX, maxMoveSpeed * Time.deltaTime);
             smoothedDeltaY = Mathf.MoveTowards(smoothedDeltaY, targetDeltaY, maxMoveSpeed * Time.deltaTime);
-            
+
             // Calculate new unclamped position
             Vector2 newPos = new Vector2(startPos.x + smoothedDeltaX, startPos.y + smoothedDeltaY);
 
@@ -99,13 +99,15 @@ public class ObjectMove : MonoBehaviour
             lastFrameHeight = newPos.y;
 
             // if the object hits the top of the border, do jump thing
-            if (!hitTop && newPos.y + halfSize.y == parentStartPos.y + topLeft.y)
+            bool atTop = Mathf.Abs((newPos.y + halfSize.y) - (parentStartPos.y + topLeft.y)) <= 0.00001f;
+            if (!hitTop && atTop)
             {
                 hitTop = true;
                 ReachedMaxHeight?.Invoke(gameObject);
                 topParticles.Play();
+                Debug.Log("yo");
             }
-            else if (newPos.y + halfSize.y != parentStartPos.y + topLeft.y)
+            else if (!atTop)
             {
                 hitTop = false;
             }

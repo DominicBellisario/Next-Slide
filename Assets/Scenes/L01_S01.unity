@@ -637,6 +637,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3184899789665946071, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
+      propertyPath: EmissionModule.rateOverTime.minMaxState
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5450278753829089141, guid: da32a1dcd07db0e4a9605db2f285cb88, type: 3}
       propertyPath: m_DrawMode
       value: 1
