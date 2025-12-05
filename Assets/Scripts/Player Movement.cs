@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public enum PlayerState
@@ -9,6 +10,7 @@ public enum PlayerState
     BounceBackNormal,
     BounceBackImpact,
     Stunned,
+    Dead,
     Target
 }
 
@@ -49,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float stunTimeImpact;
     [Header("Misc")]
     [SerializeField] float objectLaunchUpForce;
-
+    [SerializeField] LayerMask squishLayers;
 
     Rigidbody2D rb;
     int facingRight;
@@ -62,6 +64,8 @@ public class PlayerMovement : MonoBehaviour
     bool disableTriggers;
     Action nextState;
     Vector2 lastFrameVelocity;
+    bool hitTop;
+    bool hitBottom;
 
     void OnEnable()
     {
@@ -169,6 +173,11 @@ public class PlayerMovement : MonoBehaviour
         lastFrameVelocity = rb.linearVelocity;
     }
 
+    void LateUpdate()
+    {
+        hitTop = false;
+        hitBottom = false;
+    }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -254,10 +263,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (collision.CompareTag("Target"))
         {
-            currentState = PlayerState.Target;
-            centerCollider.enabled = false;
-            rightCollider.enabled = false;
-            leftCollider.enabled = false;
+            SwitchToTarget();
             HitTarget?.Invoke();
         }
     }
@@ -265,9 +271,22 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (disableTriggers) return;
-        if (CircleCast(0.2f, centerCollider.includeLayers).collider != null && CircleCast(-0.2f, centerCollider.includeLayers).collider != null)
+        foreach (ContactPoint2D contact in collision.contacts)
         {
-            Debug.Log("squish");
+            // Direction from contact point toward player
+            Vector2 normal = contact.normal;
+
+            // Collision coming from above (normal pointing down)
+            if (normal.y < -0.5f) hitTop = true;
+
+            // Collision coming from below (normal pointing up)
+            if (normal.y > 0.5f) hitBottom = true;
+        }
+
+        if (hitTop && hitBottom)
+        {
+            SwitchToDead();
+            SquishV?.Invoke();
         }
     }
 
@@ -280,6 +299,22 @@ public class PlayerMovement : MonoBehaviour
     {
         ImpactState?.Invoke();
         currentState = PlayerState.Impact;
+    }
+    private void SwitchToTarget()
+    {
+        currentState = PlayerState.Target;
+        disableTriggers = true;
+        centerCollider.enabled = false;
+        rightCollider.enabled = false;
+        leftCollider.enabled = false;
+    }
+    private void SwitchToDead()
+    {
+        disableTriggers = true;
+        centerCollider.enabled = false;
+        rightCollider.enabled = false;
+        leftCollider.enabled = false;
+        currentState = PlayerState.Dead;
     }
 
     private Vector2 NormalAlignedForce(Vector2 startForce)

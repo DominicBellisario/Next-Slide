@@ -21,6 +21,9 @@ public class PlayerEffects : MonoBehaviour
     [Header("After Image")]
     [SerializeField] GameObject afterimagePrefab;
     [SerializeField] float spawnInterval = 0.05f;
+    [Header("Death")]
+    [SerializeField] Color deadColor;
+    [SerializeField] float deathWaitTime;
 
     Rigidbody2D rb;
     Color startColor;
@@ -39,6 +42,7 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.HitGroundHard += PlayHardFallParticles;
         PlayerMovement.HitGroundHard += StopLaunchParticles;
         PlayerMovement.HitGroundSoft += StopLaunchParticles;
+        PlayerMovement.SquishV += PlaySquishEffect;
     }
     void OnDisable()
     {
@@ -52,6 +56,7 @@ public class PlayerEffects : MonoBehaviour
         PlayerMovement.HitGroundHard -= PlayHardFallParticles;
         PlayerMovement.HitGroundHard -= StopLaunchParticles;
         PlayerMovement.HitGroundSoft -= StopLaunchParticles;
+        PlayerMovement.SquishV -= PlaySquishEffect;
     }
 
     void Start()
@@ -87,6 +92,14 @@ public class PlayerEffects : MonoBehaviour
         }
         yield return new WaitForSeconds(targetWaitTime);
         FinishedTargetEffect?.Invoke();
+    }
+
+    private void PlaySquishEffect() 
+    { 
+        rb.linearVelocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Static;
+        sprite.color = deadColor;
+        StartCoroutine(Helper.DoThisAfterDelay(Helper.ReloadScene, deathWaitTime));
     }
 
     private void PlayLaunchParticles()
