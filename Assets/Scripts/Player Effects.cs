@@ -18,12 +18,14 @@ public class PlayerEffects : MonoBehaviour
     [SerializeField] ParticleSystem leftImpactLaunchParticles;
     [SerializeField] ParticleSystem rightImpactLaunchParticles;
     [SerializeField] ParticleSystem hardFallParticles;
+    [SerializeField] ParticleSystem deathParticles;
     [Header("After Image")]
     [SerializeField] GameObject afterimagePrefab;
     [SerializeField] float spawnInterval = 0.05f;
     [Header("Death")]
-    [SerializeField] Color deadColor;
-    [SerializeField] float deathWaitTime;
+    [SerializeField] Sprite deadSprite;
+    [SerializeField] float beforeShatterTime;
+    [SerializeField] float afterShatterTime;
 
     Rigidbody2D rb;
     Color startColor;
@@ -96,11 +98,23 @@ public class PlayerEffects : MonoBehaviour
 
     private void PlaySquishEffect() 
     { 
-        rb.linearVelocity = Vector2.zero;
-        rb.bodyType = RigidbodyType2D.Static;
-        sprite.color = deadColor;
-        StartCoroutine(Helper.DoThisAfterDelay(Helper.ReloadScene, deathWaitTime));
+        StartCoroutine(SquishEffect());
     }
+
+    private IEnumerator SquishEffect()
+    {
+        rb.linearVelocity = Vector2.zero;
+        rb.simulated = false;
+        sprite.color = Color.red;
+        sprite.sprite = deadSprite;
+        yield return new WaitForSeconds(beforeShatterTime);
+
+        sprite.enabled = false;
+        deathParticles.Play();
+        yield return new WaitForSeconds(afterShatterTime);
+
+        Helper.ReloadScene();
+    } 
 
     private void PlayLaunchParticles()
     {

@@ -431,10 +431,12 @@ MonoBehaviour:
   leftImpactLaunchParticles: {fileID: 1432968428064605168}
   rightImpactLaunchParticles: {fileID: 6898141074177002669}
   hardFallParticles: {fileID: 4320910337819858165}
+  deathParticles: {fileID: 9115044671400679651}
   afterimagePrefab: {fileID: 778465778966169856, guid: fb2df73ca0892714b84d533b8a147e7b, type: 3}
   spawnInterval: 0.15
-  deadColor: {r: 1, g: 0, b: 0, a: 1}
-  deathWaitTime: 1
+  deadSprite: {fileID: 21300000, guid: aeeb17061a072f845947a4f80bb1396a, type: 3}
+  beforeShatterTime: 0.3
+  afterShatterTime: 1
 --- !u!114 &439280374059659156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -609,12 +611,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ce3b46e4798dea848a479c39cc24b605, type: 3}
   m_Color: {r: 0.745283, g: 0, b: 0.71718395, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 1
-  m_Size: {x: 0.6, y: 1.2}
+  m_DrawMode: 0
+  m_Size: {x: 1.3333334, y: 1.3333334}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -655,6 +657,7 @@ Transform:
   - {fileID: 6713308236293445780}
   - {fileID: 1257495740147013577}
   - {fileID: 4136447993479119052}
+  - {fileID: 9002216620860640474}
   m_Father: {fileID: 299508172319454998}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7498304430012797068
@@ -1033,6 +1036,73 @@ ParticleSystem:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4212649098766191703, guid: 72949f0608af14845815436f0969475a, type: 3}
   m_PrefabInstance: {fileID: 1500886091634758073}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2645420631503161316
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6267370761707581796}
+    m_Modifications:
+    - target: {fileID: 38243092196892190, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+      propertyPath: m_Name
+      value: Player Shatter
+      objectReference: {fileID: 0}
+    - target: {fileID: 6365873663462886206, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6365873663462886206, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6365873663462886206, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6365873663462886206, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6365873663462886206, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6365873663462886206, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6365873663462886206, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6365873663462886206, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6365873663462886206, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6365873663462886206, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+--- !u!4 &9002216620860640474 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6365873663462886206, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+  m_PrefabInstance: {fileID: 2645420631503161316}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &9115044671400679651 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6541840033137811207, guid: 581bcfbb54c7f054899abad1ef5bd614, type: 3}
+  m_PrefabInstance: {fileID: 2645420631503161316}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4817519868949912420
 PrefabInstance:
