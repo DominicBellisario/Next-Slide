@@ -435,8 +435,8 @@ MonoBehaviour:
   afterimagePrefab: {fileID: 778465778966169856, guid: fb2df73ca0892714b84d533b8a147e7b, type: 3}
   spawnInterval: 0.15
   deadSprite: {fileID: 21300000, guid: aeeb17061a072f845947a4f80bb1396a, type: 3}
-  beforeShatterTime: 0.3
-  afterShatterTime: 1
+  beforeShatterTime: 1.2
+  afterShatterTime: 3
 --- !u!114 &439280374059659156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -608,9 +608,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: 2028205891
+  m_SortingLayer: 4
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: ce3b46e4798dea848a479c39cc24b605, type: 3}
   m_Color: {r: 0.745283, g: 0, b: 0.71718395, a: 1}
   m_FlipX: 0

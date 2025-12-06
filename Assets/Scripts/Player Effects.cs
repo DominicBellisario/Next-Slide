@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerEffects : MonoBehaviour
 {
     public static event Action FinishedTargetEffect;
+    public static event Action ShatterPlayer;
 
     [SerializeField] SpriteRenderer sprite;
     [SerializeField] float targetSlowDownTime;
@@ -109,6 +110,7 @@ public class PlayerEffects : MonoBehaviour
         sprite.sprite = deadSprite;
         yield return new WaitForSeconds(beforeShatterTime);
 
+        ShatterPlayer?.Invoke();
         sprite.enabled = false;
         deathParticles.Play();
         yield return new WaitForSeconds(afterShatterTime);
