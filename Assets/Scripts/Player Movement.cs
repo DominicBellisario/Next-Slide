@@ -64,8 +64,7 @@ public class PlayerMovement : MonoBehaviour
     bool disableTriggers;
     Action nextState;
     Vector2 lastFrameVelocity;
-    bool hitTop;
-    bool hitBottom;
+    bool hitTop, hitBottom, hitRight, hitLeft;
 
     void OnEnable()
     {
@@ -175,8 +174,7 @@ public class PlayerMovement : MonoBehaviour
 
     void LateUpdate()
     {
-        hitTop = false;
-        hitBottom = false;
+        hitTop = hitBottom = hitLeft = hitRight = false;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -269,26 +267,31 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void OnCollisionStay2D(Collision2D collision)
+{
+    if (disableTriggers) return;
+
+    foreach (ContactPoint2D contact in collision.contacts)
     {
-        if (disableTriggers) return;
-        foreach (ContactPoint2D contact in collision.contacts)
-        {
-            // Direction from contact point toward player
-            Vector2 normal = contact.normal;
+        Vector2 normal = contact.normal;
 
-            // Collision coming from above (normal pointing down)
-            if (normal.y < -0.5f) hitTop = true;
+        // Vertical squish
+        if (normal.y < -0.5f) hitTop = true;
+        if (normal.y > 0.5f) hitBottom = true;
 
-            // Collision coming from below (normal pointing up)
-            if (normal.y > 0.5f) hitBottom = true;
-        }
-
-        if (hitTop && hitBottom)
-        {
-            SwitchToDead();
-            SquishV?.Invoke();
-        }
+        // Horizontal squish
+        if (normal.x < -0.5f) hitRight = true;
+        if (normal.x > 0.5f) hitLeft  = true;
     }
+
+    bool verticalSquish = hitTop && hitBottom;
+    bool horizontalSquish = hitLeft && hitRight;
+
+    if (verticalSquish || horizontalSquish)
+    {
+        SwitchToDead();
+        SquishV?.Invoke();
+    }
+}
 
     private void SwitchToNormal()
     {
