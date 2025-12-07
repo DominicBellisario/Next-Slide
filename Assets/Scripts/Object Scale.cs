@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class ObjectScale : MonoBehaviour
 {
+    public static event Action Clicked;
+    public static event Action UnClicked;
     public static event Action<GameObject> ReachedMaxHeight;
     public static event Action<GameObject, float> ChangingHeight;
 
@@ -139,6 +141,7 @@ public class ObjectScale : MonoBehaviour
         // Begin resizing if the mouse is down and near an editable edge
         if (Input.GetMouseButtonDown(0) && IsNearEdge())
         {
+            Clicked?.Invoke();
             startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             startSize = spriteRenderer.size;
             startPos = transform.position;
@@ -230,6 +233,7 @@ public class ObjectScale : MonoBehaviour
         // Stop resizing when mouse released
         if (edgeBeingResized != NONE && Input.GetMouseButtonUp(0))
         {
+            UnClicked?.Invoke();
             smoothedDeltaX = 0f;
             smoothedDeltaY = 0f;
             edgesLogic[edgeBeingResized].ChangeToIdleColor();

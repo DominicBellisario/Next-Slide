@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
@@ -7,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class ObjectRotate : MonoBehaviour
 {
+    public static event Action Clicked;
+    public static event Action UnClicked;
     public static event Action<GameObject, float> ChangingRotation;
     [SerializeField] Edge arrow;
     [SerializeField] float rotationSpeed = 360f; // degrees per second
@@ -32,6 +33,7 @@ public class ObjectRotate : MonoBehaviour
         // Handle click and drag input here (non-physics)
         if (Input.GetMouseButtonDown(0) && ObjectClicked())
         {
+            Clicked?.Invoke();
             rotating = true;
             arrow.ChangeToSelectedColor();
 
@@ -52,6 +54,7 @@ public class ObjectRotate : MonoBehaviour
 
         if (rotating && Input.GetMouseButtonUp(0))
         {
+            UnClicked?.Invoke();
             rotating = false;
             arrow.ChangeToIdleColor();
         }

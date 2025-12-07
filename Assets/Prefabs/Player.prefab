@@ -73,9 +73,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 2028205891
+  m_SortingLayer: 4
+  m_SortingOrder: 2
   m_Sprite: {fileID: 2125556543627830797, guid: ac41c90847c9d58459bcdc57263da4c3, type: 3}
   m_Color: {r: 0, g: 0.697165, b: 1, a: 1}
   m_FlipX: 0
@@ -298,9 +298,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 2028205891
+  m_SortingLayer: 4
+  m_SortingOrder: 2
   m_Sprite: {fileID: 2125556543627830797, guid: ac41c90847c9d58459bcdc57263da4c3, type: 3}
   m_Color: {r: 0, g: 0.697165, b: 1, a: 1}
   m_FlipX: 0
@@ -450,6 +450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 5450278753829089141}
+  sizeMultiplier: {x: 0.5, y: 0.8}
   topLeft: {fileID: 1656907035611406181}
   topRight: {fileID: 7796130095058206315}
   bottomLeft: {fileID: 7498304430012797068}
@@ -563,7 +564,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 299508172319454998}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -733,9 +734,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 2028205891
+  m_SortingLayer: 4
+  m_SortingOrder: 2
   m_Sprite: {fileID: 2125556543627830797, guid: ac41c90847c9d58459bcdc57263da4c3, type: 3}
   m_Color: {r: 0, g: 0.697165, b: 1, a: 1}
   m_FlipX: 0
@@ -820,9 +821,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 2028205891
+  m_SortingLayer: 4
+  m_SortingOrder: 2
   m_Sprite: {fileID: 2125556543627830797, guid: ac41c90847c9d58459bcdc57263da4c3, type: 3}
   m_Color: {r: 0, g: 0.697165, b: 1, a: 1}
   m_FlipX: 0

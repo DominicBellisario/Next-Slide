@@ -11,6 +11,11 @@ public class Audio : MonoBehaviour
     [SerializeField] AudioSource pEventsSource;
     [SerializeField] AudioClip deathBefore;
     [SerializeField] AudioClip deathAfter;
+    [Header("Objects")]
+    [SerializeField] AudioSource objects;
+    [SerializeField] AudioClip objectClick;
+    [SerializeField] AudioClip objectUnClick;
+    [SerializeField] AudioClip rotateObjectMove;
     [Header ("Speed Panel")]
     [SerializeField] AudioSource speedPanel;
     [SerializeField] AudioClip hitSpeedPanel;
@@ -27,6 +32,12 @@ public class Audio : MonoBehaviour
         PlayerMovement.HitGroundHard += PlayGround;
         PlayerMovement.SquishV += PlayDeathBefore;
         PlayerEffects.ShatterPlayer += PlayDeathAfter;
+        ObjectScale.Clicked += PlayObjectClick;
+        ObjectMove.Clicked += PlayObjectClick;
+        ObjectRotate.Clicked += PlayObjectClick;
+        ObjectScale.UnClicked += PlayObjectUnClick;
+        ObjectMove.UnClicked += PlayObjectUnClick;
+        ObjectRotate.UnClicked += PlayObjectUnClick;
     }
     void OnDisable()
     {
@@ -37,6 +48,12 @@ public class Audio : MonoBehaviour
         PlayerMovement.HitGroundHard -= PlayGround;
         PlayerMovement.SquishV -= PlayDeathBefore;
         PlayerEffects.ShatterPlayer -= PlayDeathAfter;
+        ObjectScale.Clicked -= PlayObjectClick;
+        ObjectMove.Clicked -= PlayObjectClick;
+        ObjectRotate.Clicked -= PlayObjectClick;
+        ObjectScale.UnClicked -= PlayObjectUnClick;
+        ObjectMove.UnClicked -= PlayObjectUnClick;
+        ObjectRotate.UnClicked -= PlayObjectUnClick;
     }
 
     void PlayBounceBackNormal(int nan) { bounceSource.PlayOneShot(bounceBackNormal); }
@@ -52,4 +69,10 @@ public class Audio : MonoBehaviour
     void PlayDeathBefore() { pEventsSource.PlayOneShot(deathBefore); }
 
     void PlayDeathAfter() { pEventsSource.PlayOneShot(deathAfter); }
+
+    void PlayObjectClick() { objects.PlayOneShot(objectClick); }
+
+    void PlayObjectUnClick() { objects.PlayOneShot(objectUnClick); }
+
+    void PlayRotateObjectMove() { pEventsSource.PlayOneShot(deathAfter); }
 }

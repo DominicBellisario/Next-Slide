@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class ObjectMove : MonoBehaviour
 {
+    public static event Action Clicked;
+    public static event Action UnClicked;
     public static event Action<GameObject> ReachedMaxHeight;
     public static event Action<GameObject, float> ChangingHeight;
     const int TOP = 0;
@@ -63,6 +65,7 @@ public class ObjectMove : MonoBehaviour
         // if the mouse is down and the object is clicked
         if (Input.GetMouseButtonDown(0) && ObjectClicked())
         {
+            Clicked?.Invoke();
             startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             startPos = rb.position;
             lastFrameHeight = startPos.y;
@@ -115,6 +118,7 @@ public class ObjectMove : MonoBehaviour
         // stop moving when mouse released
         if (moving && Input.GetMouseButtonUp(0))
         {
+            UnClicked?.Invoke();
             smoothedDeltaX = 0f;
             smoothedDeltaY = 0f;
             moving = false;
