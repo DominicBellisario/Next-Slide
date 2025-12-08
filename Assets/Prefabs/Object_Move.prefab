@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7019039698103077881}
   - component: {fileID: 5621217530735007878}
+  - component: {fileID: 6364610286548799580}
   m_Layer: 6
   m_Name: Arrows
   m_TagString: Untagged
@@ -87,6 +88,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6364610286548799580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103119338079986291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa4499666a400254da7084e61da40cfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedColor: {r: 1, g: 1, b: 0, a: 1}
 --- !u!1 &525248861607149496
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,6 +415,7 @@ MonoBehaviour:
   - {fileID: 525248861607149496}
   - {fileID: 1412598221650375781}
   - {fileID: 7565767592056835119}
+  arrow: {fileID: 6364610286548799580}
   topParticles: {fileID: 7260630955293373228}
 --- !u!50 &7890725440585849826
 Rigidbody2D:

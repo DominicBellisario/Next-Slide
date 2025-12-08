@@ -314,13 +314,20 @@ MonoBehaviour:
   pEventsSource: {fileID: 5115212439135725253}
   deathBefore: {fileID: 8300000, guid: 35165893d4185764c8862e726bbf6c9d, type: 3}
   deathAfter: {fileID: 8300000, guid: f4b69781e1e342b489b5cbb3fc8a7660, type: 3}
-  objects: {fileID: 7771982228004259603}
+  bounceUp: {fileID: 8300000, guid: 82e3f43c9c8e5f24598528c16d23b611, type: 3}
+  objectsSource: {fileID: 7771982228004259603}
   objectClick: {fileID: 8300000, guid: 35613f09ebee2554b9f6231dbcf1e58a, type: 3}
   objectUnClick: {fileID: 8300000, guid: 829b08c17c9735a4ea0ed7f0a711641e, type: 3}
-  rotateObjectMove: {fileID: 8300000, guid: 50c919875adf8ea45aa8f2f57270f45d, type: 3}
-  speedPanel: {fileID: 395718669819041003}
+  rotateObjectMoveRight: {fileID: 8300000, guid: 50c919875adf8ea45aa8f2f57270f45d, type: 3}
+  rotateObjectMoveLeft: {fileID: 8300000, guid: cbe852486c9909b42940fb7b437978a5, type: 3}
+  borderHits:
+  - {fileID: 8300000, guid: 92a7c486a0804c840aea0a963c7647cc, type: 3}
+  - {fileID: 8300000, guid: d4bca296c20054b499e8fc9867ee093c, type: 3}
+  - {fileID: 8300000, guid: 060aff9db6243d2458d6825889d21f5f, type: 3}
+  - {fileID: 8300000, guid: 9e8a1ae0b3e761449aca8fde92a17c2d, type: 3}
+  speedPanelSource: {fileID: 395718669819041003}
   hitSpeedPanel: {fileID: 8300000, guid: e51669da7b90d464abe72dc34a5bfdbe, type: 3}
-  levelTransition: {fileID: 3911381069653252544}
+  levelTransitionSource: {fileID: 3911381069653252544}
   hitTarget: {fileID: 8300000, guid: 0fc4951bd0d71194cb9c7cadcd5d0421, type: 3}
 --- !u!1 &7590799579674376212
 GameObject:

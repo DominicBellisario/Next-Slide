@@ -11,16 +11,19 @@ public class Audio : MonoBehaviour
     [SerializeField] AudioSource pEventsSource;
     [SerializeField] AudioClip deathBefore;
     [SerializeField] AudioClip deathAfter;
+    [SerializeField] AudioClip bounceUp;
     [Header("Objects")]
-    [SerializeField] AudioSource objects;
+    [SerializeField] AudioSource objectsSource;
     [SerializeField] AudioClip objectClick;
     [SerializeField] AudioClip objectUnClick;
-    [SerializeField] AudioClip rotateObjectMove;
+    [SerializeField] AudioClip rotateObjectMoveRight;
+    [SerializeField] AudioClip rotateObjectMoveLeft;
+    [SerializeField] AudioClip[] borderHits;
     [Header ("Speed Panel")]
-    [SerializeField] AudioSource speedPanel;
+    [SerializeField] AudioSource speedPanelSource;
     [SerializeField] AudioClip hitSpeedPanel;
     [Header ("Level Transition")]
-    [SerializeField] AudioSource levelTransition;
+    [SerializeField] AudioSource levelTransitionSource;
     [SerializeField] AudioClip hitTarget;
 
     void OnEnable()
@@ -38,6 +41,9 @@ public class Audio : MonoBehaviour
         ObjectScale.UnClicked += PlayObjectUnClick;
         ObjectMove.UnClicked += PlayObjectUnClick;
         ObjectRotate.UnClicked += PlayObjectUnClick;
+        ObjectRotate.RotatedAGoodAmount += PlayRotateObjectMove;
+        PlayerMovement.LaunchedUp += PlayLaunchSound;
+        ObjectMove.HitBorder += PlayBorderHitSound;
     }
     void OnDisable()
     {
@@ -54,15 +60,18 @@ public class Audio : MonoBehaviour
         ObjectScale.UnClicked -= PlayObjectUnClick;
         ObjectMove.UnClicked -= PlayObjectUnClick;
         ObjectRotate.UnClicked -= PlayObjectUnClick;
+        ObjectRotate.RotatedAGoodAmount -= PlayRotateObjectMove;
+        PlayerMovement.LaunchedUp -= PlayLaunchSound;
+        ObjectMove.HitBorder -= PlayBorderHitSound;
     }
 
     void PlayBounceBackNormal(int nan) { bounceSource.PlayOneShot(bounceBackNormal); }
 
     void PlayBounceBackImpact(int nan) { bounceSource.PlayOneShot(bounceBackImpact); }
 
-    void PlaySpeedPanel() { speedPanel.PlayOneShot(hitSpeedPanel); }
+    void PlaySpeedPanel() { speedPanelSource.PlayOneShot(hitSpeedPanel); }
 
-    void PlayTarget() { levelTransition.PlayOneShot(hitTarget); }
+    void PlayTarget() { levelTransitionSource.PlayOneShot(hitTarget); }
 
     void PlayGround() { bounceSource.PlayOneShot(groundImpact); }
 
@@ -70,9 +79,20 @@ public class Audio : MonoBehaviour
 
     void PlayDeathAfter() { pEventsSource.PlayOneShot(deathAfter); }
 
-    void PlayObjectClick() { objects.PlayOneShot(objectClick); }
+    void PlayObjectClick() { objectsSource.PlayOneShot(objectClick); }
 
-    void PlayObjectUnClick() { objects.PlayOneShot(objectUnClick); }
+    void PlayObjectUnClick() { objectsSource.PlayOneShot(objectUnClick); }
 
-    void PlayRotateObjectMove() { pEventsSource.PlayOneShot(deathAfter); }
+    void PlayRotateObjectMove(bool rotatingRight) 
+    { 
+        if (rotatingRight) objectsSource.PlayOneShot(rotateObjectMoveRight); 
+        else objectsSource.PlayOneShot(rotateObjectMoveLeft);
+    }
+
+    void PlayLaunchSound() { pEventsSource.PlayOneShot(bounceUp); }
+
+    void PlayBorderHitSound()
+    {
+        objectsSource.PlayOneShot(borderHits[Random.Range(0,borderHits.Length)]);
+    }
 }

@@ -7,6 +7,7 @@ public class ObjectMove : MonoBehaviour
 {
     public static event Action Clicked;
     public static event Action UnClicked;
+    public static event Action HitBorder;
     public static event Action<GameObject> ReachedMaxHeight;
     public static event Action<GameObject, float> ChangingHeight;
     const int TOP = 0;
@@ -18,6 +19,7 @@ public class ObjectMove : MonoBehaviour
     [SerializeField] Vector2 topLeft;
     [SerializeField] Vector2 bottomRight;
     [SerializeField] GameObject[] borders;
+    [SerializeField] Edge arrow;
     [SerializeField] ParticleSystem topParticles;
     SpriteRenderer spriteRenderer;
     SpriteRenderer[] borderSprites;
@@ -30,7 +32,8 @@ public class ObjectMove : MonoBehaviour
     Vector2 startPos;
     float lastFrameHeight;
     Vector3 parentStartPos;
-    bool hitTop;
+    bool hitTop, hitRight, hitBottom, hitLeft;
+    const float BORDER_EPSILON = 0.00001f;
 
     void Start()
     {
@@ -54,7 +57,7 @@ public class ObjectMove : MonoBehaviour
         borderSprites[RIGHT].size = new Vector2(borderSprites[RIGHT].size.x, Mathf.Abs(bottomRight.y - topLeft.y));
         borderSprites[BOTTOM].size = new Vector2(Mathf.Abs(bottomRight.x - topLeft.x), borderSprites[BOTTOM].size.y);
         borderSprites[LEFT].size = new Vector2(borderSprites[LEFT].size.x, Mathf.Abs(bottomRight.y - topLeft.y));
-        
+
         topParticles.transform.localPosition = new Vector3(0f, spriteRenderer.size.y / 2, 0f);
         var shape = topParticles.shape;
         shape.radius = spriteRenderer.size.x / 2;
@@ -66,6 +69,7 @@ public class ObjectMove : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && ObjectClicked())
         {
             Clicked?.Invoke();
+            arrow.ChangeToSelectedColor();
             startMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             startPos = rb.position;
             lastFrameHeight = startPos.y;
@@ -101,24 +105,57 @@ public class ObjectMove : MonoBehaviour
             ChangingHeight?.Invoke(gameObject, newPos.y - lastFrameHeight);
             lastFrameHeight = newPos.y;
 
-            // if the object hits the top of the border, do jump thing
-            bool atTop = Mathf.Abs((newPos.y + halfSize.y) - (parentStartPos.y + topLeft.y)) <= 0.00001f;
+            // --- Border Detection ---
+            float leftLimit = parentStartPos.x + topLeft.x;
+            float rightLimit = parentStartPos.x + bottomRight.x;
+            float topLimit = parentStartPos.y + topLeft.y;
+            float bottomLimit = parentStartPos.y + bottomRight.y;
+
+            bool atTop = Mathf.Abs((newPos.y + halfSize.y) - topLimit) <= BORDER_EPSILON;
+            bool atBottom = Mathf.Abs((newPos.y - halfSize.y) - bottomLimit) <= BORDER_EPSILON;
+            bool atRight = Mathf.Abs((newPos.x + halfSize.x) - rightLimit) <= BORDER_EPSILON;
+            bool atLeft = Mathf.Abs((newPos.x - halfSize.x) - leftLimit) <= BORDER_EPSILON;
+
+            // ----- TOP -----
             if (!hitTop && atTop)
             {
                 hitTop = true;
                 ReachedMaxHeight?.Invoke(gameObject);
                 topParticles.Play();
+                HitBorder?.Invoke();
             }
-            else if (!atTop)
+            else if (!atTop) hitTop = false;
+
+            // ----- BOTTOM -----
+            if (!hitBottom && atBottom)
             {
-                hitTop = false;
+                hitBottom = true;
+                HitBorder?.Invoke();
             }
+            else if (!atBottom) hitBottom = false;
+
+            // ----- RIGHT -----
+            if (!hitRight && atRight)
+            {
+                hitRight = true;
+                HitBorder?.Invoke();
+            }
+            else if (!atRight) hitRight = false;
+
+            // ----- LEFT -----
+            if (!hitLeft && atLeft)
+            {
+                hitLeft = true;
+                HitBorder?.Invoke();
+            }
+            else if (!atLeft) hitLeft = false;
         }
 
         // stop moving when mouse released
         if (moving && Input.GetMouseButtonUp(0))
         {
             UnClicked?.Invoke();
+            arrow.ChangeToIdleColor();
             smoothedDeltaX = 0f;
             smoothedDeltaY = 0f;
             moving = false;

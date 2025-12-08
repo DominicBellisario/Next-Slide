@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -9,13 +10,16 @@ public class ObjectRotate : MonoBehaviour
     public static event Action Clicked;
     public static event Action UnClicked;
     public static event Action<GameObject, float> ChangingRotation;
+    public static event Action<bool> RotatedAGoodAmount;
     [SerializeField] Edge arrow;
     [SerializeField] float rotationSpeed = 360f; // degrees per second
+    [SerializeField] float degreesPerSound = 20f;
     SpriteRenderer spriteRenderer;
     Rigidbody2D rb;
     bool rotating;
     float startAngle;
     float targetAngle;
+    float soundAngle;
 
     void Start()
     {
@@ -68,8 +72,21 @@ public class ObjectRotate : MonoBehaviour
         // Smoothly rotate toward the target angle using Rigidbody2D
         float newAngle = Mathf.MoveTowardsAngle(rb.rotation, targetAngle, rotationSpeed * Time.fixedDeltaTime);
         rb.MoveRotation(newAngle);
+        
         float deltaAngle = Mathf.DeltaAngle(startAngle, newAngle);
         if (deltaAngle != float.Epsilon) ChangingRotation?.Invoke(gameObject, Mathf.DeltaAngle(startAngle, newAngle));
+
+        soundAngle += deltaAngle;
+        if (soundAngle >= degreesPerSound)
+        {
+            RotatedAGoodAmount?.Invoke(true);
+            soundAngle = 0f;
+        }
+        else if (soundAngle <= -degreesPerSound)
+        {
+            RotatedAGoodAmount?.Invoke(false);
+            soundAngle = 0f;
+        }
     }
 
     bool ObjectClicked()
