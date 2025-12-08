@@ -267,31 +267,31 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void OnCollisionStay2D(Collision2D collision)
-{
-    if (disableTriggers) return;
-
-    foreach (ContactPoint2D contact in collision.contacts)
     {
-        Vector2 normal = contact.normal;
+        if (disableTriggers) return;
 
-        // Vertical squish
-        if (normal.y < -0.5f) hitTop = true;
-        if (normal.y > 0.5f) hitBottom = true;
+        foreach (ContactPoint2D contact in collision.contacts)
+        {
+            Vector2 normal = contact.normal;
 
-        // Horizontal squish
-        if (normal.x < -0.5f) hitRight = true;
-        if (normal.x > 0.5f) hitLeft  = true;
+            // Vertical squish
+            if (normal.y < -0.5f) hitTop = true;
+            if (normal.y > 0.5f) hitBottom = true;
+
+            // Horizontal squish
+            if (normal.x < -0.5f) hitRight = true;
+            if (normal.x > 0.5f) hitLeft = true;
+        }
+
+        bool verticalSquish = hitTop && hitBottom;
+        bool horizontalSquish = hitLeft && hitRight;
+
+        if (verticalSquish || horizontalSquish)
+        {
+            SwitchToDead();
+            SquishV?.Invoke();
+        }
     }
-
-    bool verticalSquish = hitTop && hitBottom;
-    bool horizontalSquish = hitLeft && hitRight;
-
-    if (verticalSquish || horizontalSquish)
-    {
-        SwitchToDead();
-        SquishV?.Invoke();
-    }
-}
 
     private void SwitchToNormal()
     {
@@ -354,31 +354,12 @@ public class PlayerMovement : MonoBehaviour
     private void CheckIfRotatingPlatformIsChanging(GameObject platformObj, float deltaAngle)
     {
         RaycastHit2D hit = CircleCast(0.3f, centerCollider.includeLayers);
-        if (hit.collider && hit.collider.gameObject == platformObj)
-        {
-            // Convert to radians (for Mathf trig)
-            float radians = deltaAngle * Mathf.Deg2Rad;
 
-            // Vector from pivot to player (in world space)
-            Vector2 pivotToPlayer = (Vector2)(transform.position - platformObj.transform.position);
+        if (!hit.collider || hit.collider.gameObject != platformObj)
+            return;
 
-            // Compute where that point moves when the platform rotates by deltaAngle
-            // Rotation direction in Unity is counter-clockwise positive
-            Vector2 rotated = new Vector2(
-                pivotToPlayer.x * Mathf.Cos(radians) - pivotToPlayer.y * Mathf.Sin(radians),
-                pivotToPlayer.x * Mathf.Sin(radians) + pivotToPlayer.y * Mathf.Cos(radians)
-            );
-
-            // Displacement caused by rotation
-            Vector2 delta = rotated - pivotToPlayer;
-
-            // The height (Y) difference is what you care about
-            float heightChange = delta.y;
-
-            // Apply it
-            pendingVerticalOffset += heightChange;
-        }
-
+        // prevents player from launching super high
+        rb.linearVelocityY = Mathf.Clamp(rb.linearVelocityY, -100f, 2f);
     }
 
     private void CheckIfPlatformBelowIsChanging(GameObject platformObj, float heightChange)

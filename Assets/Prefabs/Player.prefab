@@ -450,7 +450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 5450278753829089141}
-  sizeMultiplier: {x: 0.5, y: 0.8}
+  sizeMultiplier: {x: 0.5, y: 1.1}
   topLeft: {fileID: 1656907035611406181}
   topRight: {fileID: 7796130095058206315}
   bottomLeft: {fileID: 7498304430012797068}

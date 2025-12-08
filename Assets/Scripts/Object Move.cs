@@ -21,6 +21,9 @@ public class ObjectMove : MonoBehaviour
     [SerializeField] GameObject[] borders;
     [SerializeField] Edge arrow;
     [SerializeField] ParticleSystem topParticles;
+    [SerializeField] ParticleSystem bottomParticles;
+    [SerializeField] ParticleSystem leftParticles;
+    [SerializeField] ParticleSystem rightParticles;
     SpriteRenderer spriteRenderer;
     SpriteRenderer[] borderSprites;
     Edge[] bordersLogic;
@@ -59,8 +62,18 @@ public class ObjectMove : MonoBehaviour
         borderSprites[LEFT].size = new Vector2(borderSprites[LEFT].size.x, Mathf.Abs(bottomRight.y - topLeft.y));
 
         topParticles.transform.localPosition = new Vector3(0f, spriteRenderer.size.y / 2, 0f);
-        var shape = topParticles.shape;
-        shape.radius = spriteRenderer.size.x / 2;
+        bottomParticles.transform.localPosition = new Vector3(0f, -spriteRenderer.size.y / 2, 0f);
+        leftParticles.transform.localPosition = new Vector3(-spriteRenderer.size.x / 2, 0f, 0f);
+        rightParticles.transform.localPosition = new Vector3(spriteRenderer.size.x / 2, 0f, 0f);
+
+        var topShape = topParticles.shape;
+        topShape.radius = spriteRenderer.size.x / 2;
+        var bottomShape = bottomParticles.shape;
+        bottomShape.radius = spriteRenderer.size.x / 2;
+        var leftShape = leftParticles.shape;
+        leftShape.radius = spriteRenderer.size.y / 2;
+        var rightShape = rightParticles.shape;
+        rightShape.radius = spriteRenderer.size.y / 2;
     }
 
     void Update()
@@ -130,6 +143,7 @@ public class ObjectMove : MonoBehaviour
             if (!hitBottom && atBottom)
             {
                 hitBottom = true;
+                bottomParticles.Play();
                 HitBorder?.Invoke();
             }
             else if (!atBottom) hitBottom = false;
@@ -138,6 +152,7 @@ public class ObjectMove : MonoBehaviour
             if (!hitRight && atRight)
             {
                 hitRight = true;
+                rightParticles.Play();
                 HitBorder?.Invoke();
             }
             else if (!atRight) hitRight = false;
@@ -146,6 +161,7 @@ public class ObjectMove : MonoBehaviour
             if (!hitLeft && atLeft)
             {
                 hitLeft = true;
+                leftParticles.Play();
                 HitBorder?.Invoke();
             }
             else if (!atLeft) hitLeft = false;

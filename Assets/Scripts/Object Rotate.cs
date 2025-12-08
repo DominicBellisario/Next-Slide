@@ -54,6 +54,8 @@ public class ObjectRotate : MonoBehaviour
             Vector2 direction = mouseWorld - transform.position;
             float currentAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             targetAngle = currentAngle - startAngle;
+
+            arrow.transform.rotation = Quaternion.identity;
         }
 
         if (rotating && Input.GetMouseButtonUp(0))
@@ -74,7 +76,7 @@ public class ObjectRotate : MonoBehaviour
         rb.MoveRotation(newAngle);
         
         float deltaAngle = Mathf.DeltaAngle(startAngle, newAngle);
-        if (deltaAngle != float.Epsilon) ChangingRotation?.Invoke(gameObject, Mathf.DeltaAngle(startAngle, newAngle));
+        if (deltaAngle != 0.000f) ChangingRotation?.Invoke(gameObject, Mathf.DeltaAngle(startAngle, newAngle));
 
         soundAngle += deltaAngle;
         if (soundAngle >= degreesPerSound)
