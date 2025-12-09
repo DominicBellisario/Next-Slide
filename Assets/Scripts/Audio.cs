@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class Audio : MonoBehaviour
 {
-    [Header ("Bounce")]
+    [Header("Bounce")]
     [SerializeField] AudioSource bounceSource;
     [SerializeField] AudioClip bounceBackNormal;
     [SerializeField] AudioClip bounceBackImpact;
     [SerializeField] AudioClip groundImpact;
-    [Header ("Player Events")]
+    [Header("Player Events")]
     [SerializeField] AudioSource pEventsSource;
     [SerializeField] AudioClip deathBefore;
     [SerializeField] AudioClip deathAfter;
@@ -21,10 +21,10 @@ public class Audio : MonoBehaviour
     [SerializeField] AudioClip rotateObjectMoveRight;
     [SerializeField] AudioClip rotateObjectMoveLeft;
     [SerializeField] AudioClip[] borderHits;
-    [Header ("Speed Panel")]
+    [Header("Speed Panel")]
     [SerializeField] AudioSource speedPanelSource;
     [SerializeField] AudioClip hitSpeedPanel;
-    [Header ("Level Transition")]
+    [Header("Level Transition")]
     [SerializeField] AudioSource levelTransitionSource;
     [SerializeField] AudioClip hitTarget;
 
@@ -48,6 +48,7 @@ public class Audio : MonoBehaviour
         ObjectMove.HitBorder += PlayBorderHitSound;
         FlipObject.StartFlip += PlayStartFlipSound;
         FlipObject.EndFlip += PlayEndFlipSound;
+        ObjectScale.ReachedMaxHeight += PlayBorderHitSound;
     }
     void OnDisable()
     {
@@ -69,6 +70,7 @@ public class Audio : MonoBehaviour
         ObjectMove.HitBorder -= PlayBorderHitSound;
         FlipObject.StartFlip -= PlayStartFlipSound;
         FlipObject.EndFlip -= PlayEndFlipSound;
+        ObjectScale.ReachedMaxHeight -= PlayBorderHitSound;
     }
 
     void PlayBounceBackNormal(int nan) { bounceSource.PlayOneShot(bounceBackNormal); }
@@ -89,18 +91,16 @@ public class Audio : MonoBehaviour
 
     void PlayObjectUnClick() { objectsSource.PlayOneShot(objectUnClick); }
 
-    void PlayRotateObjectMove(bool rotatingRight) 
-    { 
-        if (rotatingRight) objectsSource.PlayOneShot(rotateObjectMoveRight); 
+    void PlayRotateObjectMove(bool rotatingRight)
+    {
+        if (rotatingRight) objectsSource.PlayOneShot(rotateObjectMoveRight);
         else objectsSource.PlayOneShot(rotateObjectMoveLeft);
     }
 
     void PlayLaunchSound() { pEventsSource.PlayOneShot(bounceUp); }
 
-    void PlayBorderHitSound()
-    {
-        objectsSource.PlayOneShot(borderHits[Random.Range(0,borderHits.Length)]);
-    }
+    void PlayBorderHitSound() { objectsSource.PlayOneShot(borderHits[Random.Range(0, borderHits.Length)]); }
+    void PlayBorderHitSound(GameObject nan) { objectsSource.PlayOneShot(borderHits[Random.Range(0, borderHits.Length)]); }
 
     void PlayStartFlipSound() { pEventsSource.PlayOneShot(flipStart); }
 
