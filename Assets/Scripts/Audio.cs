@@ -12,6 +12,8 @@ public class Audio : MonoBehaviour
     [SerializeField] AudioClip deathBefore;
     [SerializeField] AudioClip deathAfter;
     [SerializeField] AudioClip bounceUp;
+    [SerializeField] AudioClip flipStart;
+    [SerializeField] AudioClip flipEnd;
     [Header("Objects")]
     [SerializeField] AudioSource objectsSource;
     [SerializeField] AudioClip objectClick;
@@ -44,6 +46,8 @@ public class Audio : MonoBehaviour
         ObjectRotate.RotatedAGoodAmount += PlayRotateObjectMove;
         PlayerMovement.LaunchedUp += PlayLaunchSound;
         ObjectMove.HitBorder += PlayBorderHitSound;
+        FlipObject.StartFlip += PlayStartFlipSound;
+        FlipObject.EndFlip += PlayEndFlipSound;
     }
     void OnDisable()
     {
@@ -63,6 +67,8 @@ public class Audio : MonoBehaviour
         ObjectRotate.RotatedAGoodAmount -= PlayRotateObjectMove;
         PlayerMovement.LaunchedUp -= PlayLaunchSound;
         ObjectMove.HitBorder -= PlayBorderHitSound;
+        FlipObject.StartFlip -= PlayStartFlipSound;
+        FlipObject.EndFlip -= PlayEndFlipSound;
     }
 
     void PlayBounceBackNormal(int nan) { bounceSource.PlayOneShot(bounceBackNormal); }
@@ -95,4 +101,8 @@ public class Audio : MonoBehaviour
     {
         objectsSource.PlayOneShot(borderHits[Random.Range(0,borderHits.Length)]);
     }
+
+    void PlayStartFlipSound() { pEventsSource.PlayOneShot(flipStart); }
+
+    void PlayEndFlipSound() { pEventsSource.PlayOneShot(flipEnd); }
 }

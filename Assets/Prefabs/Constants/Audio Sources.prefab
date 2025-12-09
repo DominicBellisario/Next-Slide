@@ -315,6 +315,8 @@ MonoBehaviour:
   deathBefore: {fileID: 8300000, guid: 35165893d4185764c8862e726bbf6c9d, type: 3}
   deathAfter: {fileID: 8300000, guid: f4b69781e1e342b489b5cbb3fc8a7660, type: 3}
   bounceUp: {fileID: 8300000, guid: 82e3f43c9c8e5f24598528c16d23b611, type: 3}
+  flipStart: {fileID: 8300000, guid: c9abfaff024ef4d4aa86642ae2fecd63, type: 3}
+  flipEnd: {fileID: 8300000, guid: f5a8cd7c736bb504d8d2f39d8be603eb, type: 3}
   objectsSource: {fileID: 7771982228004259603}
   objectClick: {fileID: 8300000, guid: 35613f09ebee2554b9f6231dbcf1e58a, type: 3}
   objectUnClick: {fileID: 8300000, guid: 829b08c17c9735a4ea0ed7f0a711641e, type: 3}

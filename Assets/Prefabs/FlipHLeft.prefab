@@ -74,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -338769947
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 1f26945e970839e41ba35badd04237ef, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -164,7 +164,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -338769947
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0, g: 0.98099947, b: 1, a: 1}
@@ -225,46 +225,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeae86ebe657ea44b982f861a653e46a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flipDuration: 1
+  flipDuration: 0.5
   flipCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: -0
-      outSlope: -0
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0.25795946
     - serializedVersion: 3
-      time: 0.29887295
-      value: 0.000029116869
-      inSlope: 0.037370224
-      outSlope: 2.5093894
+      time: 0.24803978
+      value: -0.0008699903
+      inSlope: 0.025457872
+      outSlope: 0.16942388
       tangentMode: 1
       weightedMode: 0
-      inWeight: 0.20257962
-      outWeight: 0.098244086
+      inWeight: 0.39519253
+      outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.65079457
-      value: 0.96226937
-      inSlope: 2.9235482
-      outSlope: -2.7108262
+      time: 0.5993419
+      value: 0.99898964
+      inSlope: 4.814631
+      outSlope: -7.7771673
       tangentMode: 1
       weightedMode: 0
-      inWeight: 0.10020592
-      outWeight: 0.124172136
+      inWeight: 0.038741104
+      outWeight: 0.04131589
     - serializedVersion: 3
-      time: 0.9977273
+      time: 0.99997634
       value: 0.004761905
-      inSlope: -2.4437664
-      outSlope: -2.4437664
-      tangentMode: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
       weightedMode: 0
-      inWeight: 0.104576446
-      outWeight: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
