@@ -19,6 +19,13 @@ public class Helper : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
+    public void LoadSceneNextFrame(string sceneName) { StartCoroutine(LoadSceneLate(sceneName)); }
+    private IEnumerator LoadSceneLate(string sceneName)
+    {
+        yield return new WaitForEndOfFrame();
+        LoadScene(sceneName);
+    }
+
     public static void ReloadScene()
     {
         LoadScene(SceneManager.GetActiveScene().name);

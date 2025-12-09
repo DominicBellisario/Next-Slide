@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &400615196 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7923871252287471502, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
+  m_PrefabInstance: {fileID: 599167743}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e16dfaf68e6960044b1fa8b72868447a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &596468088 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2185452558513588281, guid: 520a5e6ecff57ba409370ad36bb489be, type: 3}
@@ -130,6 +141,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e28a4a87546f9f2408f1ffbb4806109c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &599167743
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3998055896902770221, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
+      propertyPath: m_Name
+      value: Global Variables
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292301965428070952, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292301965428070952, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292301965428070952, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292301965428070952, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292301965428070952, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292301965428070952, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292301965428070952, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292301965428070952, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292301965428070952, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292301965428070952, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c52220c4dcb132946a409ee3c6264b98, type: 3}
 --- !u!1 &939622432
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,9 +281,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 400615196}
+        m_TargetAssemblyTypeName: GVar, Assembly-CSharp
+        m_MethodName: set_NumOfSlidesInLevel
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 12
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 596468088}
         m_TargetAssemblyTypeName: Helper, Assembly-CSharp
-        m_MethodName: LoadScene
+        m_MethodName: LoadSceneNextFrame
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -968,6 +1048,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1767469836693381396}
   - {fileID: 832880504319594873}
+  - {fileID: 599167743}
   - {fileID: 1351787540}
   - {fileID: 4109549178646157136}
   - {fileID: 591699855464491724}

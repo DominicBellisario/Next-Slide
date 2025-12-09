@@ -15,7 +15,9 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] TextMeshProUGUI levelNumbers;
 
     CanvasGroup cGroup;
-    LevelVariables lVar;
+    LVar lVar;
+    GVar gVar;
+
     float startYPos;
     float endYPos;
     bool isPaused;
@@ -33,11 +35,12 @@ public class PauseMenu : MonoBehaviour
     void Start()
     {
         cGroup = GetComponent<CanvasGroup>();
-        lVar = FindAnyObjectByType<LevelVariables>();
+        lVar = FindAnyObjectByType<LVar>();
+        gVar = GVar.Instance;
         startYPos = transform.localPosition.y;
         endYPos = startYPos - 50;
         title.text = lVar.SlideName;
-        levelNumbers.text = "L" + lVar.LevelNumber + " S" + lVar.SlideNumber;
+        levelNumbers.text = "L" + lVar.LevelNumber + " S" + lVar.SlideNumber + "/" + gVar.NumOfSlidesInLevel;
     }
 
     private void RunPauseLogic()

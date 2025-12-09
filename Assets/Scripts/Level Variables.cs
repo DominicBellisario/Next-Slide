@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class LevelVariables : MonoBehaviour
+public class LVar : MonoBehaviour
 {
     [SerializeField] string slideName;
     public string SlideName { get { return slideName; } }
