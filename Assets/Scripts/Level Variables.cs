@@ -32,9 +32,15 @@ public class LVar : MonoBehaviour
     void Start()
     {
         gVar = GVar.Instance;
-        if (finalLevel && PlayerPrefs.GetFloat("FastestTime_L" + levelNumber, 0f) > gVar.CurrentTimeInLevel)
+        // save fastest time if last level and if time is faster
+        if (!finalLevel) return;
+
+        string key = "FastestTime_L" + levelNumber;
+        float savedTime = PlayerPrefs.GetFloat(key, float.MaxValue);
+
+        if (gVar.CurrentTimeInLevel < savedTime)
         {
-            PlayerPrefs.SetFloat("FastestTime_L" + levelNumber, gVar.CurrentTimeInLevel);
+            PlayerPrefs.SetFloat(key, gVar.CurrentTimeInLevel);
             PlayerPrefs.Save();
         }
     }

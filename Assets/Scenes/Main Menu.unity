@@ -153,7 +153,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.8, y: -45}
+  m_AnchoredPosition: {x: -2.8, y: -23.600006}
   m_SizeDelta: {x: 213.5665, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &145882832
@@ -421,7 +421,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.8, y: 16.900002}
+  m_AnchoredPosition: {x: -2.8, y: 38.3}
   m_SizeDelta: {x: 213.5665, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &274415647
@@ -1253,7 +1253,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.8, y: -14.8}
+  m_AnchoredPosition: {x: -2.8, y: 6.5999937}
   m_SizeDelta: {x: 213.5665, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1321216771
@@ -1622,7 +1622,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.2, y: 66}
+  m_AnchoredPosition: {x: 1.2, y: 61.2}
   m_SizeDelta: {x: 217.1, y: 1.9199}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1902196287
@@ -1720,7 +1720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9245283, g: 0.9245283, b: 0.9245283, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1791,7 +1791,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.8, y: 48.6}
+  m_AnchoredPosition: {x: -2.8, y: -110.8}
   m_SizeDelta: {x: 213.5665, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1990320555
@@ -1848,7 +1848,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
