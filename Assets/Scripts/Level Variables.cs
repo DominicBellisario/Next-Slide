@@ -32,15 +32,16 @@ public class LVar : MonoBehaviour
     void Start()
     {
         gVar = GVar.Instance;
-        if (finalLevel && PlayerPrefs.GetFloat("FastestTime_L" + levelNumber) > gVar.CurrentTimeInLevel)
+        if (finalLevel && PlayerPrefs.GetFloat("FastestTime_L" + levelNumber, 0f) > gVar.CurrentTimeInLevel)
         {
             PlayerPrefs.SetFloat("FastestTime_L" + levelNumber, gVar.CurrentTimeInLevel);
+            PlayerPrefs.Save();
         }
     }
 
     void Update()
     {
-        timeSpent = Time.deltaTime;
+        timeSpent += Time.deltaTime;
     }
 
     private void AddToDeaths() { deaths++; }
@@ -48,24 +49,25 @@ public class LVar : MonoBehaviour
     private void SaveData()
     {
         // set total time
-        AddToFloat("TotalTime_L " + levelNumber, timeSpent);
+        AddToFloat("TotalTime_L" + levelNumber, timeSpent);
         // set current run time
         gVar.CurrentTimeInLevel += timeSpent;
         // set deaths
-        AddToInt("Deaths_L " + levelNumber, deaths);
+        AddToInt("Deaths_L" + levelNumber, deaths);
+        PlayerPrefs.Save();
     }
 
     private void AddToFloat(string tag, float num)
     {
         if (num == 0) return;
-        float currentValue = PlayerPrefs.GetFloat(tag);
+        float currentValue = PlayerPrefs.GetFloat(tag, 0f);
         PlayerPrefs.SetFloat(tag, currentValue + num);
     }
 
     private void AddToInt(string tag, int num)
     {
         if (num == 0) return;
-        int currentValue = PlayerPrefs.GetInt(tag);
+        int currentValue = PlayerPrefs.GetInt(tag, 0);
         PlayerPrefs.SetInt(tag, currentValue + num);
     }
 }
