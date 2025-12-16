@@ -34,17 +34,7 @@ public class LevelButton : MonoBehaviour
 
     public void ToggleInfoPanel()
     {
-        if (infoGroup.alpha == 0f) 
-        { 
-            infoGroup.alpha = 1f; 
-            infoGroup.interactable = true;
-            infoGroup.blocksRaycasts = true;
-        }
-        else 
-        { 
-            infoGroup.alpha = 0f; 
-            infoGroup.interactable = false;
-            infoGroup.blocksRaycasts = false;
-        }
+        if (infoGroup.alpha == 0f) { infoGroup.alpha = 1f; }
+        else { infoGroup.alpha = 0f; }
     }
 }
