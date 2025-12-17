@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Learn the basics of the slidescape
+  m_text: Work In Progress
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -358,7 +358,7 @@ Animator:
   m_GameObject: {fileID: 2743555732999255547}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 361606cced9be84498652c9453913702, type: 2}
+  m_Controller: {fileID: 9100000, guid: bd0e47ed452cfeb4da918a550d7944b2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -434,8 +434,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1df204880e931e438ca3b32ad498f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelNum: 1
-  numOfSlides: 12
+  levelNum: 0
+  numOfSlides: 0
   infoGroup: {fileID: 7095041307343959070}
   numOfSlidesText: {fileID: 197971550140748217}
   totalTimeText: {fileID: 3657164954378076268}
@@ -692,7 +692,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: My First Slideshow
+  m_text: WIP
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1313,6 +1313,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1711057177264501123}
   - component: {fileID: 1807323249655398088}
+  - component: {fileID: 56304404070276678}
   - component: {fileID: 7095041307343959070}
   - component: {fileID: 7523302302376146350}
   m_Layer: 5
@@ -1355,6 +1356,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8858938744765573078}
   m_CullTransparentMesh: 1
+--- !u!223 &56304404070276678
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8858938744765573078}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 1
+  m_TargetDisplay: 0
 --- !u!225 &7095041307343959070
 CanvasGroup:
   m_ObjectHideFlags: 0
